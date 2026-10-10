@@ -1,0 +1,43 @@
+{
+  "241241351": {
+    "seller_id": "241241351",
+    "total_calls": 1,
+    "successful_calls": 1,
+    "preferred_language": "hinglish",
+    "preferred_pace": 0.9,
+    "preferred_tone": "consultative",
+    "preferred_strategy": "problem_solving",
+    "past_objections_logged": [
+      "frustrated",
+      "engaged"
+    ],
+    "call_history": [
+      {
+        "call_id": "call_241241351_1_1791530276",
+        "timestamp": "2026-10-09 12:47:56",
+        "disposition": "callback_requested",
+        "success": true,
+        "initial_persona_state": {
+          "pace": 0.9,
+          "tone": "empathetic_problem_solver",
+          "formality": "respectful_warm",
+          "language_mix": "hinglish",
+          "script_strategy": "problem_solving"
+        },
+        "final_persona_state": {
+          "pace": 0.9,
+          "tone": "consultative",
+          "formality": "respectful_warm",
+          "language_mix": "hinglish",
+          "script_strategy": "problem_solving"
+        },
+        "signals_encountered": [
+          "frustrated",
+          "engaged"
+        ],
+        "notes": "Completed call with 2 persona adaptations."
+      }
+    ],
+    "last_updated": "2026-10-09 12:47:56"
+  }
+}

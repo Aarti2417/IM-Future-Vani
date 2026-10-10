@@ -1,0 +1,36 @@
+{
+  "scenario_id": "scenario_1",
+  "title": "Busy Factory Owner (Industrial Coating)",
+  "subtitle": "Tests real-time pace acceleration & filler stripping when seller is in a rush",
+  "seller": {
+    "fk_glusr_usr_id": 192119502,
+    "seller_state": "Uttar Pradesh",
+    "business_type": "Proprietorship",
+    "annual_turnover": "40 L - 1.5 Cr",
+    "nature_of_business": "Manufacturer",
+    "top_category_1": "Color Coating Services",
+    "bot_answered": 10,
+    "showed_frustration": 0,
+    "past_objections": "Seller Unavailability & Scheduling Constraints (1); Callback / Deferred Engagement (1)",
+    "past_dispositions_detailed": "not_interested (2); call_dropped (1)",
+    "avg_answered_call_sec": 56.0,
+    "turn_count": 42
+  },
+  "dialogue_script": [
+    {
+      "seller_text": "Bolo jaldi, main factory floor pe hu, bilkul time nahi hai.",
+      "expected_signal": "rushed",
+      "expected_adaptation": "Accelerate pace to 1.14x, strip filler, deliver 1 key value metric"
+    },
+    {
+      "seller_text": "Achha, industrial color coating ke kitne bulk buyers hain Kanpur aur Lucknow se?",
+      "expected_signal": "engaged",
+      "expected_adaptation": "Consultative response, share concrete numbers, propose WhatsApp summary"
+    },
+    {
+      "seller_text": "Theek hai, mujhe WhatsApp pe details bhej do aur kal 11 baje connect karo.",
+      "expected_signal": "engaged",
+      "disposition": "meeting_fixed"
+    }
+  ]
+}

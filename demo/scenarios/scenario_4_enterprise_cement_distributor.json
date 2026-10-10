@@ -1,0 +1,36 @@
+{
+  "scenario_id": "scenario_4",
+  "title": "Enterprise Cement Distributor (High Turnover)",
+  "subtitle": "Tests formal executive cadence, Indian English/Hinglish, and quantitative ROI strategy",
+  "seller": {
+    "fk_glusr_usr_id": 29416327,
+    "seller_state": "Gujarat",
+    "business_type": "Proprietorship",
+    "annual_turnover": "5 - 25 Cr",
+    "nature_of_business": "Service Provider and Others",
+    "top_category_1": "Ambuja Cement",
+    "bot_answered": 3,
+    "showed_frustration": 0,
+    "past_objections": "nan",
+    "past_dispositions_detailed": "callback_requested (1); meeting_fixed (1)",
+    "avg_answered_call_sec": 162.3,
+    "turn_count": 49
+  },
+  "dialogue_script": [
+    {
+      "seller_text": "Good afternoon. Please make it quick, what are the bulk procurement quantities on your platform?",
+      "expected_signal": "engaged",
+      "expected_adaptation": "Maintain crisp 1.05x pace, formal corporate formality, focus on institutional buyers"
+    },
+    {
+      "seller_text": "We handle 200+ metric ton orders across West India. Can you filter GST-verified construction firms?",
+      "expected_signal": "engaged",
+      "expected_adaptation": "Direct closing tone, highlight TrustSEAL & verified RFQ filters, propose senior account manager demo"
+    },
+    {
+      "seller_text": "Sounds productive. Send the calendar invite for tomorrow 3 PM.",
+      "expected_signal": "engaged",
+      "disposition": "meeting_fixed"
+    }
+  ]
+}

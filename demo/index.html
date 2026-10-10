@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndiaMART VANI — Voice Bot Persona Engine</title>
+  <meta name="description" content="AI Voice Bot Persona Design and Real-Time Mid-Call Adaptation for IndiaMART Sellers powered by Sarvam AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation & Status Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-badge">
+        <span class="logo-im">IM</span>
+        <div class="logo-text">
+          <span class="logo-title">VANI <span class="highlight">Persona</span></span>
+          <span class="logo-sub">Adaptive Voice AI for IndiaMART</span>
+        </div>
+      </div>
+      <div class="badge hackathon-badge">Hackathon 2026 • Problem 4</div>
+    </div>
+
+    <nav class="nav-tabs" role="tablist">
+      <button class="tab-btn active" id="tab-btn-sim" data-tab="tab-sim">
+        <span class="tab-icon">📞</span> Live Simulation
+      </button>
+      <button class="tab-btn" id="tab-btn-generator" data-tab="tab-generator">
+        <span class="tab-icon">⚙️</span> Persona Studio
+      </button>
+      <button class="tab-btn" id="tab-btn-signals" data-tab="tab-signals">
+        <span class="tab-icon">⚡</span> Signal Lab
+      </button>
+      <button class="tab-btn" id="tab-btn-memory" data-tab="tab-memory">
+        <span class="tab-icon">🧠</span> Memory & Evolution
+      </button>
+      <button class="tab-btn" id="tab-btn-evidence" data-tab="tab-evidence">
+        <span class="tab-icon">📊</span> 12.8k Call Evidence
+      </button>
+    </nav>
+
+    <div class="header-right">
+      <div class="status-pill status-ready" id="status-sarvam-pill">
+        <span class="status-dot"></span>
+        <span id="status-sarvam-text">Sarvam AI Bulbul</span>
+      </div>
+      <div class="status-pill status-ready" id="status-mcp-pill" title="Model Context Protocol Server active with 7 grounded tools">
+        <span class="status-dot"></span>
+        <span>MCP: 7 Grounded Tools</span>
+      </div>
+      <div class="status-pill" id="status-dataset-pill">
+        <span class="status-indicator">📈</span>
+        <span>12,788 Calls Grounded</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+    
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 1: LIVE CALL SIMULATION -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section class="tab-pane active" id="tab-sim">
+      <!-- Archetype Scenario Carousel / Selector -->
+      <div class="section-hero">
+        <div class="hero-text">
+          <h2>Interactive Call Simulation & Live Adaptation</h2>
+          <p>Choose an IndiaMART seller archetype or test custom utterances. Observe how VANI generates an evidence-grounded baseline and dynamically adapts voice pace, tone, formality, and strategy mid-call!</p>
+        </div>
+        <div class="scenario-chips-row" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+          <div class="scenario-chips" id="scenario-selector-container">
+            <!-- Populated by JS -->
+          </div>
+          <button class="btn btn-primary chip-build-persona" id="btn-goto-persona-builder" style="cursor: pointer;">
+            ✨ Build Custom Persona
+          </button>
+        </div>
+      </div>
+
+      <!-- 🎭 Prompt-to-Seller (Roleplay Simulator) -->
+      <div class="roleplay-creator-card" id="roleplay-creator-container">
+        <div class="roleplay-header">
+          <div class="roleplay-title-group">
+            <span class="roleplay-icon">🎭</span>
+            <div>
+              <h3>Prompt-to-Seller: Build Your Own Seller & Roleplay Live</h3>
+              <p>Type ANY seller backstory or personality prompt. VANI will automatically create the live seller, calibrate its voice persona, and start the call where <strong>YOU are that seller</strong>!</p>
+            </div>
+          </div>
+          <span class="chip chip-highlight">Auto-Adaptive Roleplay</span>
+        </div>
+
+        <div class="prompt-input-row">
+          <textarea id="input-roleplay-prompt" placeholder="e.g. I am a 50-year-old brass handicrafts manufacturer in Moradabad, turnover 80 Lakhs. I speak polite Hindi. I will start calm, but if you pitch paid plans I will get angry because I lost money before..."></textarea>
+          <button type="button" class="btn btn-launch-roleplay" id="btn-launch-prompt-seller">
+            🚀 Launch Call & Be This Seller
+          </button>
+        </div>
+
+        <div class="prompt-inspiration-row">
+          <span class="prompt-chip-label">Quick Ideas:</span>
+          <button type="button" class="inspiration-chip" data-prompt="I am a 48-year-old brass handicrafts manufacturer in Moradabad, turnover 80 Lakhs, speaking polite Hindi. I will start calm, but if you pitch paid plans I will get angry because I lost money before.">
+            🪔 Moradabad Brass (Calm ➔ Gets Angry)
+          </button>
+          <button type="button" class="inspiration-chip" data-prompt="I am a 29-year-old female founder of an organic skincare brand in Mumbai, turnover 2 Cr. Fast-paced, busy with clients, and skeptical about lead authenticity.">
+            🧴 Mumbai Skincare (Female ➔ Busy & Skeptical)
+          </button>
+          <button type="button" class="inspiration-chip" data-prompt="I am a traditional marble flooring contractor in Jaipur, turnover 1.2 Cr. Speaking Rajasthani-Hindi, wants bulk hotel orders but has zero computer knowledge.">
+            🏛️ Jaipur Marble (Traditional ➔ Curious)
+          </button>
+        </div>
+      </div>
+
+      <div class="sim-grid">
+        <!-- Left Panel: Pre-Call Persona Card -->
+        <div class="glass-card panel-persona">
+          <div class="panel-header">
+            <div class="title-with-icon">
+              <span class="panel-icon">🎭</span>
+              <div>
+                <h3>Assigned Voice Persona</h3>
+                <span class="panel-sub" id="persona-seller-title">Seller ID: Loading...</span>
+              </div>
+            </div>
+            <span class="badge" id="persona-state-badge">Pre-Call Baseline</span>
+          </div>
+
+          <!-- Voice & Delivery Metrics -->
+          <div class="voice-hero-card">
+            <div class="speaker-avatar" id="persona-speaker-avatar">🎙️</div>
+            <div class="speaker-meta">
+              <h4 id="persona-voice-name">Aditi (Crisp Register)</h4>
+              <span class="speaker-id" id="persona-voice-id">Voice ID: aditi_enhi_ads</span>
+              <div class="tag-row">
+                <span class="chip chip-sm" id="persona-gender-chip">Gender: Female</span>
+                <span class="chip chip-sm" id="persona-pitch-chip">Pitch: Bright</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Parameter Gauges -->
+          <div class="gauges-grid">
+            <div class="gauge-card">
+              <div class="gauge-label">
+                <span>Pace Rate</span>
+                <strong id="gauge-pace-val">0.98x</strong>
+              </div>
+              <div class="meter-bar">
+                <div class="meter-fill" id="meter-pace-fill" style="width: 50%;"></div>
+              </div>
+              <div class="meter-scale">
+                <span>0.85x (Slow)</span>
+                <span>1.0x</span>
+                <span>1.18x (Fast)</span>
+              </div>
+            </div>
+
+            <div class="prop-row">
+              <span class="prop-name">Formality:</span>
+              <span class="chip chip-highlight" id="prop-formality">Respectful Warm (Aap / Ji)</span>
+            </div>
+            <div class="prop-row">
+              <span class="prop-name">Tone:</span>
+              <span class="chip chip-primary" id="prop-tone">Consultative Growth Partner</span>
+            </div>
+            <div class="prop-row">
+              <span class="prop-name">Language Mix:</span>
+              <span class="chip chip-accent" id="prop-lang">Hinglish (Hindi + Trade English)</span>
+            </div>
+            <div class="prop-row">
+              <span class="prop-name">Script Strategy:</span>
+              <span class="chip chip-warning" id="prop-strategy">Social Proof (Local Cluster)</span>
+            </div>
+          </div>
+
+          <!-- Evidence-based Rationale Accordion -->
+          <div class="rationale-box">
+            <h4>💡 Why this Persona was Chosen:</h4>
+            <ul id="persona-rationale-list" class="rationale-bullets">
+              <li>Turnover & category analyzed against 12k past calls.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Center Panel: The Live Call Console -->
+        <div class="glass-card panel-call">
+          <!-- Call Screen Header -->
+          <div class="call-topbar">
+            <div class="caller-info">
+              <div class="caller-pulse active" id="call-pulse-dot"></div>
+              <div>
+                <strong id="call-seller-name">UPVC Windows Wholesaler</strong>
+                <span class="caller-state" id="call-seller-loc">Bihar • 0-40 Lakhs Turnover</span>
+              </div>
+            </div>
+            <div class="call-stats">
+              <span class="call-timer" id="call-timer-display">00:14</span>
+              <span class="call-status-badge" id="call-status-badge">CONNECTED</span>
+            </div>
+          </div>
+
+          <!-- Animated Audio Waveform -->
+          <div class="waveform-container">
+            <div class="waveform-bars" id="waveform-animation">
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+              <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+            <span class="waveform-label" id="waveform-status-label">Voice Channel Active • 22kHz PCM</span>
+          </div>
+
+          <!-- Roleplay Active Banner -->
+          <div class="roleplay-active-banner" id="roleplay-active-banner" style="display: none;">
+            <div class="roleplay-active-meta">
+              <span class="roleplay-active-avatar">🎭</span>
+              <div class="roleplay-active-text">
+                <h5 id="roleplay-character-heading">Roleplaying as: Rajesh Patel (Brass Manufacturer, UP)</h5>
+                <p id="roleplay-character-sub">Mood: Calm ➔ Try getting angry or rushed below to test VANI's mid-call adaptation!</p>
+              </div>
+            </div>
+            <button class="btn btn-sm btn-outline" id="btn-exit-roleplay" type="button">Exit Roleplay</button>
+          </div>
+
+          <!-- Dynamic Adaptation Alert Banner -->
+          <div class="adaptation-alert-banner" id="adaptation-alert-banner" style="display: none;">
+            <div class="adaptation-alert-icon">⚡</div>
+            <div class="adaptation-alert-content">
+              <strong id="alert-title">MID-CALL ADAPTATION TRIGGERED</strong>
+              <p id="alert-desc">Frustration detected (Confidence 95%) ➔ Switched to Empathetic De-escalation & Pace lowered to 0.90x</p>
+            </div>
+          </div>
+
+          <!-- Turn-by-Turn Conversation Stream -->
+          <div class="conversation-stream" id="conversation-stream-container">
+            <!-- Dynamically injected turn bubbles -->
+          </div>
+
+          <!-- ⚡ Mid-Call Mood Shift Toolbar -->
+          <div class="mood-shift-toolbar" id="mood-shift-toolbar">
+            <span class="mood-toolbar-title">⚡ Test Mid-Call Mood Shifts:</span>
+            <button type="button" class="mood-btn btn-mood-angry" id="btn-mood-angry" title="Switch mood from calm to angry">
+              😡 Get Angry ("Baar baar kyu phone karte ho, band karo!")
+            </button>
+            <button type="button" class="mood-btn btn-mood-rushed" id="btn-mood-rushed" title="Simulate being in a hurry">
+              ⏱️ Get Rushed ("Abhi counter pe bheed hai, time nahi hai!")
+            </button>
+            <button type="button" class="mood-btn btn-mood-skeptical" id="btn-mood-skeptical" title="Challenge lead quality & past loss">
+              🤨 Get Skeptical ("Pehle bhi paise doob gaye the!")
+            </button>
+            <button type="button" class="mood-btn btn-mood-curious" id="btn-mood-curious" title="Show positive interest">
+              💡 Get Curious ("Achha batao, kaun se buyers hain?")
+            </button>
+          </div>
+
+          <!-- Custom Utterance Input -->
+          <form class="custom-input-form" id="custom-utterance-form">
+            <input type="text" id="input-custom-utterance" placeholder="Type or click '🎙️ Speak' to talk directly..." autocomplete="off">
+            <button type="button" class="btn btn-mic" id="btn-mic-record" title="Click to speak using your microphone">
+              <span class="mic-icon">🎙️</span> <span id="mic-status-text">Speak</span>
+            </button>
+            <button type="submit" class="btn btn-primary" id="btn-send-utterance">Send Turn</button>
+          </form>
+
+          <!-- Call Action Controls -->
+          <div class="call-controls-row">
+            <button class="btn btn-secondary" id="btn-step-simulation">
+              ▶ Step Next Turn
+            </button>
+            <button class="btn btn-secondary" id="btn-autoplay-simulation">
+              ⏩ Auto-Play Scenario
+            </button>
+            <button class="btn btn-outline" id="btn-reset-simulation">
+              🔄 Reset Call
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Panel: Adaptation Telemetry & Memory -->
+        <div class="glass-card panel-telemetry">
+          <div class="panel-header">
+            <div class="title-with-icon">
+              <span class="panel-icon">📈</span>
+              <div>
+                <h3>Adaptation Telemetry</h3>
+                <span class="panel-sub">Real-time state transitions</span>
+              </div>
+            </div>
+            <span class="badge" id="adaptation-count-badge">0 Shifts</span>
+          </div>
+
+          <!-- Live Signal Radar / Active State -->
+          <div class="telemetry-box">
+            <h4>Current Detected Signal</h4>
+            <div class="active-signal-card" id="telemetry-active-signal">
+              <div class="sig-header">
+                <span class="sig-pill sig-neutral" id="telemetry-signal-pill">NEUTRAL</span>
+                <span class="sig-conf" id="telemetry-signal-conf">Conf: 1.00</span>
+              </div>
+              <p class="sig-action" id="telemetry-signal-action">Bot maintaining baseline conversational rhythm.</p>
+            </div>
+          </div>
+
+          <!-- Trajectory Timeline -->
+          <div class="telemetry-box">
+            <h4>Adaptation Trajectory</h4>
+            <div class="trajectory-timeline" id="telemetry-trajectory-list">
+              <div class="empty-timeline">No adaptations yet. Click a quick reaction button to trigger mid-call adaptation!</div>
+            </div>
+          </div>
+
+          <!-- Persistent Memory Preview -->
+          <div class="telemetry-box memory-box">
+            <h4>🧠 Persona Memory Impact</h4>
+            <div class="memory-impact-card" id="telemetry-memory-impact">
+              <p>When this call completes, winning parameters will be persisted to <code>personas/seller_memory.json</code> to evolve future calls.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 2: PERSONA STUDIO (CUSTOM SELLER GENERATOR) -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 2: PERSONA STUDIO & CUSTOM BUILDER -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section class="tab-pane" id="tab-generator">
+      <div class="section-hero">
+        <div class="hero-text">
+          <h2>Persona Studio: Interactive Persona Builder & Tester</h2>
+          <p>Pick a ready archetype or customize your Voice Bot's voice, pace, tone, and language. Test your custom persona live on a simulated call!</p>
+        </div>
+      </div>
+
+      <!-- 1-Click Archetype Presets -->
+      <div class="archetype-presets-wrapper">
+        <h3 style="font-size: 0.95rem; margin-bottom: 8px; color: var(--accent-cyan);">🎯 Pick a Ready Archetype Option or Customize Below:</h3>
+        <div class="archetype-presets-grid" id="archetype-presets-container">
+          <div class="archetype-preset-card active-preset" data-preset="mandi_vyapari">
+            <div class="preset-badge">Option 1 • Grounded Mandi</div>
+            <div class="preset-name">🏢 Chandan Bhaiya (Wholesale Specialist)</div>
+            <div class="preset-desc">Grounded commercial cadence, 0.95x pace, authentic Vyapari Hindi, uses concrete local peer proof.</div>
+            <div class="preset-tags">
+              <span>Shubh (Male)</span><span>0.95x</span><span>Spoken Hindi</span><span>Social Proof</span>
+            </div>
+          </div>
+          <div class="archetype-preset-card" data-preset="empathetic_resolver">
+            <div class="preset-badge">Option 2 • Risk-Free & Warm</div>
+            <div class="preset-name">🤝 Priya Sharma (Empathetic Problem Solver)</div>
+            <div class="preset-desc">Patient & calm, 0.90x pace, addresses past losses & doubts with OTP/GST verification guarantee.</div>
+            <div class="preset-tags">
+              <span>Ishita (Female)</span><span>0.90x</span><span>Hinglish</span><span>Loss Reversal</span>
+            </div>
+          </div>
+          <div class="archetype-preset-card" data-preset="fast_closer">
+            <div class="preset-badge">Option 3 • High Velocity</div>
+            <div class="preset-name">⚡ Vikram Malhotra (Metro Closer)</div>
+            <div class="preset-desc">High energy, 1.10x pace, respects busy schedules with a 30-second WhatsApp summary pivot.</div>
+            <div class="preset-tags">
+              <span>Sunny (Male)</span><span>1.10x</span><span>Business Hinglish</span><span>Direct Closing</span>
+            </div>
+          </div>
+          <div class="archetype-preset-card" data-preset="traditional_guide">
+            <div class="preset-badge">Option 4 • Traditional Guide</div>
+            <div class="preset-name">🌾 Sunita Patel (Trade Consultant)</div>
+            <div class="preset-desc">Respectful & educational, 0.92x pace, uses everyday physical shop and market analogies.</div>
+            <div class="preset-tags">
+              <span>Ritu (Female)</span><span>0.92x</span><span>Traditional Hindi</span><span>Consultative</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="studio-grid">
+        <!-- Input Form -->
+        <div class="glass-card">
+          <div class="panel-header">
+            <h3>Custom Persona & Seller Parameters</h3>
+            <span class="badge">Builder</span>
+          </div>
+
+          <form id="form-persona-studio" class="studio-form">
+            <h4 style="font-size: 0.85rem; color: var(--brand-primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Voice & Delivery Characteristics</h4>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="studio-voice-id">Voice Identity & Speaker</label>
+                <select id="studio-voice-id">
+                  <option value="shubh_enhi_ads" selected>👨 Shubh (Resonant Commercial Male • Default)</option>
+                  <option value="ishita_enhi_customer">👩 Ishita / Priya (Warm Empathetic Female)</option>
+                  <option value="sunny_enhi_customer">👨 Sunny / Vikram (Crisp High-Velocity Male)</option>
+                  <option value="ritu_hi_customer">👩 Ritu / Sunita (Traditional Regional Female)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="studio-pace">Speaking Pace</label>
+                <select id="studio-pace">
+                  <option value="0.88">Calm & Deliberate (0.88x)</option>
+                  <option value="0.95" selected>Grounded Commercial (0.95x)</option>
+                  <option value="1.00">Standard Pace (1.00x)</option>
+                  <option value="1.10">Brisk & High Velocity (1.10x)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="studio-tone">Conversational Tone</label>
+                <select id="studio-tone">
+                  <option value="consultative" selected>Consultative Trade Advisor</option>
+                  <option value="empathetic_problem_solver">Empathetic Problem Solver</option>
+                  <option value="direct_closing">Direct & Sharp Closer</option>
+                  <option value="reassuring_patient">Reassuring & Patient</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="studio-language">Language Cadence</label>
+                <select id="studio-language">
+                  <option value="hindi" selected>Shuddh Spoken Hindi (Devanagari)</option>
+                  <option value="hinglish">Commercial Mandi Hinglish</option>
+                  <option value="indian_english">Professional Indian English</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="studio-strategy">Persuasion Strategy</label>
+                <select id="studio-strategy">
+                  <option value="social_proof" selected>Local Peer Social Proof</option>
+                  <option value="problem_solving">Loss Reversal & OTP Filter</option>
+                  <option value="product_features">Direct ROI & WhatsApp Fast-Track</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="studio-formality">Formality Level</label>
+                <select id="studio-formality">
+                  <option value="respectful_warm" selected>Respectful Warm (Ji, Aap)</option>
+                  <option value="formal_corporate">Formal Corporate</option>
+                  <option value="casual_friendly">Casual Friendly Vyapari</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group" style="width: 100%;">
+                <label for="studio-opening-line">Opening Greeting (Spoken by Bot on Connect)</label>
+                <input type="text" id="studio-opening-line" value="Namaskar sir! Main IndiaMART se bol raha hoon, kya aap Industrial Valves ke business ke regarding baat kar sakte hain?">
+              </div>
+            </div>
+
+            <h4 style="font-size: 0.85rem; color: var(--accent-cyan); margin: 12px 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Target Seller Profile Context</h4>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="studio-seller-id">Seller ID</label>
+                <input type="text" id="studio-seller-id" value="987654321">
+              </div>
+              <div class="form-group">
+                <label for="studio-seller-state">Seller State / Region</label>
+                <select id="studio-seller-state">
+                  <option value="Uttar Pradesh" selected>Uttar Pradesh (Hindi Heartland)</option>
+                  <option value="Bihar">Bihar (Hindi Belt)</option>
+                  <option value="Rajasthan">Rajasthan (Traditional MSME)</option>
+                  <option value="Maharashtra">Maharashtra (Western Hub)</option>
+                  <option value="Gujarat">Gujarat (Commercial / Industrial)</option>
+                  <option value="Delhi">Delhi (NCR Metros)</option>
+                  <option value="Karnataka">Karnataka (Southern Hub)</option>
+                  <option value="Tamil Nadu">Tamil Nadu (Southern Industrial)</option>
+                  <option value="West Bengal">West Bengal (Eastern Hub)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="studio-category">Top Product Category</label>
+                <input type="text" id="studio-category" value="Industrial Valves & Fittings">
+              </div>
+              <div class="form-group">
+                <label for="studio-turnover">Annual Turnover</label>
+                <select id="studio-turnover">
+                  <option value="0 - 40 L">0 - 40 Lakhs (Micro / Artisan)</option>
+                  <option value="40 L - 1.5 Cr" selected>40 L - 1.5 Crore (Small Manufacturer)</option>
+                  <option value="1.5 - 5 Cr">1.5 - 5 Crore (Mid-Sized)</option>
+                  <option value="5 - 25 Cr">5 - 25 Crore (Large / Enterprise)</option>
+                  <option value="25 - 100 Cr">25 - 100 Crore (Corporate)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="studio-business-type">Business Constitution</label>
+                <select id="studio-business-type">
+                  <option value="Proprietorship" selected>Proprietorship</option>
+                  <option value="Partnership">Partnership</option>
+                  <option value="Private Limited">Private Limited</option>
+                  <option value="Public Limited">Public Limited</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="studio-nature">Nature of Business</label>
+                <select id="studio-nature">
+                  <option value="Manufacturer" selected>Manufacturer</option>
+                  <option value="Trader - Wholesaler/Distributor">Trader - Wholesaler/Distributor</option>
+                  <option value="Service Provider and Others">Service Provider and Others</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="btn-generate-custom-persona">
+              ⚡ Build & Review Custom Persona Blueprint
+            </button>
+          </form>
+        </div>
+
+        <!-- Generated Result View -->
+        <div class="glass-card" id="studio-result-card">
+          <div class="panel-header">
+            <h3>Generated Persona Blueprint</h3>
+            <span class="badge" id="studio-persona-badge">Ready</span>
+          </div>
+
+          <div id="studio-result-content">
+            <p class="placeholder-text">Click "Generate Tailored Voice Persona" to see the full blueprint and audio preview.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 3: SIGNAL & ADAPTATION LAB -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section class="tab-pane" id="tab-signals">
+      <div class="section-hero">
+        <div class="hero-text">
+          <h2>Signal & Adaptation Interactive Lab</h2>
+          <p>Test real-time linguistic and acoustic signal classification. Type or speak any seller response in Hindi, Hinglish, or English.</p>
+        </div>
+      </div>
+
+      <div class="lab-grid">
+        <div class="glass-card">
+          <div class="panel-header">
+            <h3>Utterance Tester</h3>
+            <span class="badge">Input</span>
+          </div>
+
+          <div class="lab-controls">
+            <label for="lab-input-text">Test Utterance (Hindi / Hinglish / English):</label>
+            <textarea id="lab-input-text" rows="3" placeholder="e.g. 'Bar bar phone mat karo disturb ho raha hu' or 'Bolo jaldi time nahi hai'"></textarea>
+
+            <div class="lab-acoustic-toggles">
+              <label class="toggle-label">
+                <input type="checkbox" id="lab-toggle-interruption">
+                <span>⚡ Seller Interrupted (Barge-in)</span>
+              </label>
+              <label class="toggle-label">
+                <input type="checkbox" id="lab-toggle-noise">
+                <span>🔊 Heavy Market / Factory Noise</span>
+              </label>
+            </div>
+
+            <div class="sample-pills">
+              <span>Quick Samples:</span>
+              <button class="pill-btn" data-sample="Bolo jaldi factory me hu time nahi hai">Rushed Sample</button>
+              <button class="pill-btn" data-sample="Kya matlab kiska call hai samajh nahi aaya">Confused Sample</button>
+              <button class="pill-btn" data-sample="Bar bar call mat karo band karo phone">Frustrated Sample</button>
+              <button class="pill-btn" data-sample="Pehle bhi paise waste hue the faayda nahi hota">Hesitant Sample</button>
+              <button class="pill-btn" data-sample="Bataiye kitna kharcha hoga aur leads kaise aati hai">Engaged Sample</button>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="btn-run-signal-test">
+              Classify Signal & Preview Adaptation
+            </button>
+          </div>
+        </div>
+
+        <div class="glass-card" id="lab-output-card">
+          <div class="panel-header">
+            <h3>Classification Result & Adaptation Response</h3>
+            <span class="badge" id="lab-badge-output">Awaiting Input</span>
+          </div>
+          <div id="lab-result-content">
+            <p class="placeholder-text">Enter an utterance and click classify to view instant signal telemetry.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 4: PERSONA MEMORY & EVOLUTION -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section class="tab-pane" id="tab-memory">
+      <div class="section-hero">
+        <div class="hero-text">
+          <h2>Persona Memory & Cross-Call Evolution</h2>
+          <p>VANI remembers winning personas per seller. Over repeated calls, baseline pace, tone, and language evolve based on proven historical meeting conversions.</p>
+        </div>
+        <button class="btn btn-outline" id="btn-reset-memory-store">
+          🔄 Reset Memory Store
+        </button>
+      </div>
+
+      <div class="memory-grid" id="memory-cards-container">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 5: EMPIRICAL EVIDENCE (12.8k CALLS) -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section class="tab-pane" id="tab-evidence">
+      <div class="section-hero">
+        <div class="hero-text">
+          <h2>Empirical Findings from 12,788 IndiaMART Calls</h2>
+          <p>Every rule in VANI's Persona Engine is grounded in real call transcripts and meeting conversion rates.</p>
+        </div>
+      </div>
+
+      <div class="evidence-grid">
+        <!-- Card 1: Pace -->
+        <div class="glass-card">
+          <h3>Pace vs Meeting Conversion Rate</h3>
+          <p class="chart-desc">Observational evidence shows slower delivery drives +168% higher meeting rate for MSMEs.</p>
+          <div class="stat-bars">
+            <div class="stat-bar-row">
+              <span class="bar-lbl">Slow Pace (0.88x - 0.92x)</span>
+              <div class="bar-track"><div class="bar-fill bar-green" style="width: 78%;"></div></div>
+              <strong class="bar-val">38.9% (n=1,115)</strong>
+            </div>
+            <div class="stat-bar-row">
+              <span class="bar-lbl">Medium Pace (0.98x - 1.0x)</span>
+              <div class="bar-track"><div class="bar-fill bar-blue" style="width: 44%;"></div></div>
+              <strong class="bar-val">21.8% (n=8,813)</strong>
+            </div>
+            <div class="stat-bar-row">
+              <span class="bar-lbl">Fast Pace (1.10x+)</span>
+              <div class="bar-track"><div class="bar-fill bar-red" style="width: 29%;"></div></div>
+              <strong class="bar-val">14.5% (n=2,860)</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Tone -->
+        <div class="glass-card">
+          <h3>Tone vs Meeting Conversion Rate</h3>
+          <p class="chart-desc">Warm and consultative delivery doubles meeting conversions over neutral monotone.</p>
+          <div class="stat-bars">
+            <div class="stat-bar-row">
+              <span class="bar-lbl">Warm / Consultative</span>
+              <div class="bar-track"><div class="bar-fill bar-green" style="width: 67%;"></div></div>
+              <strong class="bar-val">33.5% (n=3,745)</strong>
+            </div>
+            <div class="stat-bar-row">
+              <span class="bar-lbl">Neutral Monotone</span>
+              <div class="bar-track"><div class="bar-fill bar-yellow" style="width: 34%;"></div></div>
+              <strong class="bar-val">16.8% (n=9,032)</strong>
+            </div>
+            <div class="stat-bar-row">
+              <span class="bar-lbl">Pushy / Hard-Sell</span>
+              <div class="bar-track"><div class="bar-fill bar-red" style="width: 18%;"></div></div>
+              <strong class="bar-val">9.1% (n=11)</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: The Frustrated Paradox -->
+        <div class="glass-card">
+          <h3>The Frustrated Seller Paradox</h3>
+          <p class="chart-desc">Without dynamic de-escalation, irritated calls yield ZERO conversions.</p>
+          <div class="callout-box danger-box">
+            <h4>🚨 Historical Conversion with Static Bot: 0.0%</h4>
+            <p>Every single call where a seller showed frustration ended in a dropped call or DNC request under the old static bot. VANI's emergency de-escalation protocol prevents immediate hang-ups by offering sincere apologies and rescheduling.</p>
+          </div>
+        </div>
+
+        <!-- Card 4: Enterprise vs Micro -->
+        <div class="glass-card">
+          <h3>Enterprise vs Micro MSME Preference Divergence</h3>
+          <p class="chart-desc">One size does NOT fit all: Enterprise sellers demand crisp pace, while micro sellers need patience.</p>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tier</th>
+                <th>Turnover</th>
+                <th>Best Pace</th>
+                <th>Best Language Mix</th>
+                <th>Meeting Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Micro</td>
+                <td>0 - 40 L</td>
+                <td><span class="chip chip-sm">Slow (0.90x)</span></td>
+                <td>Pure Hindi / Hinglish</td>
+                <td><strong>38.8%</strong></td>
+              </tr>
+              <tr>
+                <td>Small</td>
+                <td>40 L - 1.5 Cr</td>
+                <td><span class="chip chip-sm">Slow (0.92x)</span></td>
+                <td>Hinglish</td>
+                <td><strong>35.3%</strong></td>
+              </tr>
+              <tr>
+                <td>Large</td>
+                <td>5 - 25 Cr</td>
+                <td><span class="chip chip-sm">Balanced</span></td>
+                <td>Hinglish</td>
+                <td><strong>31.1%</strong></td>
+              </tr>
+              <tr>
+                <td>Enterprise</td>
+                <td>25+ Cr</td>
+                <td><span class="chip chip-sm chip-highlight">Fast (1.05x)</span></td>
+                <td>Indian English</td>
+                <td><strong>33.3%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Audio Player Element -->
+  <audio id="global-audio-player" style="display: none;"></audio>
+
+  <!-- JavaScript -->
+  <script src="app.js?v=10"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "scenario_id": "scenario_3",
+  "title": "Frustrated Churn Risk (UPVC Windows)",
+  "subtitle": "Tests emergency de-escalation, sincere apology, and yielding conversational control",
+  "seller": {
+    "fk_glusr_usr_id": 241241351,
+    "seller_state": "Bihar",
+    "business_type": "Proprietorship",
+    "annual_turnover": "0 - 40 L",
+    "nature_of_business": "Service Provider and Others",
+    "top_category_1": "UPVC Sliding Windows",
+    "bot_answered": 3,
+    "showed_frustration": 1,
+    "past_objections": "Explicit Disinterest / Refusal (1); Existing Engagement (1)",
+    "past_dispositions_detailed": "do_not_call (1); call_dropped (1)",
+    "avg_answered_call_sec": 192.0,
+    "turn_count": 32
+  },
+  "dialogue_script": [
+    {
+      "seller_text": "Bar bar kyu call karte ho bhai? Bola na nahi chahiye! Disturb mat karo phone kaat dunga!",
+      "expected_signal": "frustrated",
+      "expected_adaptation": "Halt sales pitch immediately, drop pace to 0.90x, sincere apology, ask permission to reschedule"
+    },
+    {
+      "seller_text": "Acha theek hai, abhi main customer ke site pe hu. Kal 3 baje call karna.",
+      "expected_signal": "engaged",
+      "disposition": "callback_requested"
+    }
+  ]
+}

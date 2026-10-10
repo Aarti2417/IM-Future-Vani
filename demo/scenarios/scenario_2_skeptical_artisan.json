@@ -1,0 +1,36 @@
+{
+  "scenario_id": "scenario_2",
+  "title": "Skeptical Traditional Artisan (Brass Statues)",
+  "subtitle": "Tests patience, pure Hindi cadence, and peer social proof against cost objections",
+  "seller": {
+    "fk_glusr_usr_id": 245762792,
+    "seller_state": "Rajasthan",
+    "business_type": "Proprietorship",
+    "annual_turnover": "0 - 40 L",
+    "nature_of_business": "Trader - Wholesaler/Distributor",
+    "top_category_1": "Brass God Statues",
+    "bot_answered": 3,
+    "showed_frustration": 0,
+    "past_objections": "Pricing / Affordability; Past Bad Experience",
+    "past_dispositions_detailed": "meeting_fixed (2); not_interested (1)",
+    "avg_answered_call_sec": 435.3,
+    "turn_count": 169
+  },
+  "dialogue_script": [
+    {
+      "seller_text": "Pehle bhi account banaya tha, koi faayda nahi hua, paise waste hote hain.",
+      "expected_signal": "hesitant",
+      "expected_adaptation": "Decelerate pace to 0.88x, respectful warm tone, pivot to local social proof"
+    },
+    {
+      "seller_text": "Kya matlab? Dusre brass karigaron ko sach me orders mil rahe hain kya?",
+      "expected_signal": "confused",
+      "expected_adaptation": "Patience tone, explain physical mandi/buyer matching analogy simply in Hindi"
+    },
+    {
+      "seller_text": "Achha samajh gaya. Iska kitna kharcha padega agar hum demo dekhein?",
+      "expected_signal": "engaged",
+      "disposition": "meeting_fixed"
+    }
+  ]
+}

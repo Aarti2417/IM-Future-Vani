@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "indiamart-voice-engine": {
+      "command": "python",
+      "args": [
+        "-m",
+        "src.mcp_server"
+      ],
+      "env": {
+        "PYTHONPATH": "."
+      },
+      "description": "Grounded IndiaMART Voice Bot Engine with CRM leads, official pricing, Bulbul TTS, and anti-hallucination guardrails."
+    }
+  }
+}

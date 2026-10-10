@@ -1,22 +1,4 @@
-# Secrets & Environment
-.env
-.env.local
-
-# Data Directories & Extracted datasets
-data/
-data_extracted/
-
-# Logs & Scratch Scripts
-*.log
-logs/
-scratch/
-
-# Demo Audio & Intermediate artifacts
-demo/output/*.wav
-demo/output/*.mp3
-demo/output/*.json
-
-# Python caches
+# Python runtime caches & build artifacts
 __pycache__/
 *.pyc
 .pytest_cache/

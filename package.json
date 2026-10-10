@@ -1,0 +1,21 @@
+{
+  "name": "im-future-vani",
+  "version": "1.0.0",
+  "description": "IndiaMART VANI Voice Agent - Sarvam Samvaad Studio & Testing Suite",
+  "main": "scripts/rigorous_voice_agent_test.js",
+  "scripts": {
+    "test": "node scripts/rigorous_voice_agent_test.js",
+    "test:quick": "node scripts/test_all_tools_chat.js",
+    "kb:view": "node scripts/view_sarvam_kb.js",
+    "kb:upload": "node scripts/upload_to_sarvam_kb.js"
+  },
+  "keywords": [
+    "indiamart",
+    "vani",
+    "sarvam",
+    "voice-agent",
+    "conversational-ai"
+  ],
+  "author": "IndiaMART",
+  "license": "ISC"
+}

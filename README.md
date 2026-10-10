@@ -1,125 +1,131 @@
 # IndiaMART VANI: Dynamic Voice Bot Persona Engine
 ### Problem 4 of 6: Persona Design | Voice AI Hackathon
 
-> **Transforming IndiaMART's Voice Bot (VANI) from a one-size-fits-all voice into an adaptive, hyper-personalized conversational intelligence.**
-> Grounded in empirical analysis of **12,788 IndiaMART calls**, powered by **Sarvam AI (Bulbul v4-flash)**, and equipped with **real-time mid-call behavioral adaptation**.
+> **Transforming IndiaMART's Voice Bot (VANI) from a one-size-fits-all voice into an adaptive, hyper-personalized conversational intelligence.**  
+> Grounded in empirical analysis of **12,788 real IndiaMART calls**, integrated with **Sarvam AI (Bulbul v4-flash & Samvaad Stack)**, and equipped with **real-time mid-call behavioral adaptation**.
 
 ---
 
-## 🏆 Key Features
+## 📋 Hackathon Submission Details
 
-1. **Pre-Call Persona Generation (`src/persona_generator.py`)**:
-   - Analyzes seller turnover, business type, state, product category, engagement duration, and past objections.
-   - Tailors 5 persona dimensions:
-     - **Voice**: Speaker ID (`shubh_enhi_ads`, `aditi_enhi_ads`, `amartya_enhi_ads`), Gender, Pitch Register, Conversational Pace (0.85x – 1.18x).
-     - **Formality**: `respectful_warm` ("Aap" / "Ji"), `formal_corporate` ("Sir" / executive), `casual_friendly`.
-     - **Tone**: `consultative`, `direct_closing`, `empathetic_problem_solver`, `reassuring_patient`.
-     - **Language Mix**: Pure Hindi, Hinglish, Indian English.
-     - **Script Strategy**: Social Proof (local cluster validation), ROI Numbers (quantified pipeline), Product Features (TrustSEAL), Problem Solving (addressing churn/past issues).
-   - Generates tailored opening greetings and detailed evidence-backed rationales.
-
-2. **Ultra-Low-Latency Signal Detection (`src/signal_detector.py`)**:
-   - Classifies 7 critical behavioral signals in `< 10ms`:
-     - 🏃 `rushed`: Time-constrained, driving, factory floor.
-     - ❓ `confused`: Bewildered, unclear about intent.
-     - 🛑 `frustrated`: Hostile, irritated, do-not-call risk.
-     - 💰 `hesitant`: Skeptical, past bad experience, price-sensitive.
-     - ✨ `engaged`: Inquisitive, asking about pricing and leads.
-     - ⚡ `interrupted`: Barge-in detection.
-     - 🔊 `noise`: High factory/traffic interference.
-
-3. **Dynamic Mid-Call Adaptation State Machine (`src/persona_manager.py`)**:
-   - Transitions delivery pace, tone, language mix, and strategy on the fly.
-   - **Anti-Oscillation Guardrails & Hysteresis**: Prevents unnatural flip-flopping; clamps pace steps to $\Delta \le \pm 0.15$.
-   - **De-escalation Priority**: Frustration immediately halts commercial pitching and shifts to sincere apology and rescheduling.
-   - Logs full adaptation trajectory for call auditing.
-
-4. **Persistent Persona Memory & Evolution (`src/persona_memory.py`)**:
-   - Stores winning persona configurations in `personas/seller_memory.json`.
-   - Adapts baseline starting pace and tone for a seller's future calls based on past successful meetings.
-
-5. **Sarvam AI Integration & Offline Resilience (`src/sarvam_client.py`)**:
-   - Seamless integration with Sarvam Bulbul TTS (`bulbul:v4-flash`), Saaras STT (`saaras:v3`), and LLM completions.
-   - Built-in `MockSarvamClient` for 100% offline development, testing, and deterministic evaluation.
-   - Full parameter documentation in [`docs/assumptions.md`](file:///c:/Users/Imart/Desktop/IM%20Future/docs/assumptions.md).
-
-6. **Rich Interactive Web Dashboard (`demo/`)**:
-   - Modern dark-theme UI with glassmorphism and IndiaMART styling.
-   - 4 realistic seller archetypes ready for 1-click simulation.
-   - Live phone simulator with animated waveform, audio playback, and quick-signal injection buttons.
-   - Persona Studio, Signal Lab, Memory Explorer, and 12.8k Call Evidence charts.
+| Field | Detail |
+|---|---|
+| **Problem Statement** | **Problem 4 of 6: Persona Design (Seller-Fit Adaptive Voice Persona)** |
+| **Team Name** | IndiaMART Future VANI |
+| **Team Members** | Utkarsh Singh (`utkarsh.singh5@indiamart.com`) |
+| **Sarvam Agent ID** | `IM-Future-0c2c99ce-3384` (*IndiaMART VANI Voice Agent*) |
+| **Sarvam Agent Version**| **Version 17 (Committed & Deployed)** |
+| **Sarvam Knowledge Base ID** | `01a1261e-69f1-7daa-aa1d-710cc98fc453` (*indiamart-vani-knowledge-base*) |
+| **Sarvam Platform** | [Sarvam Samvaad Console](https://dashboard.sarvam.ai) |
+| **Demo Video Script** | [`DEMO_VIDEO_SCRIPT.md`](DEMO_VIDEO_SCRIPT.md) |
+| **Approach Note** | [`APPROACH_NOTE.md`](APPROACH_NOTE.md) |
+| **Skills & Build Journey** | [`skills.md`](skills.md) |
+| **Sample Outputs** | [`sample_outputs/`](sample_outputs/) |
 
 ---
 
-## 📊 Empirical Grounding (12,788 Analyzed Calls)
+## 🏆 Key Deliverables & Hackathon Checklist
 
-| Parameter | Best Performing | Conversion Rate | Legacy Bot Baseline | Key Insight |
+### 1. Persona Generator Running on Sample Seller Files
+- **Engine Code:** [`src/persona_generator.py`](src/persona_generator.py)
+- **Input Data:** 10 diverse sample sellers in [`data_sample/sellers.json`](data_sample/sellers.json) spanning 6 states, 4 turnover slabs, and multiple trade types.
+- **Generated Outputs:** Individual specs and rationale saved in [`sample_outputs/personas/`](sample_outputs/personas/).
+- **Summary Matrix:** [`sample_outputs/personas/persona_spec_summary.md`](sample_outputs/personas/persona_spec_summary.md) comparing all 10 configurations.
+
+### 2. Persona Spec per Seller with Reason for Each Choice
+Every generated persona outputs:
+- **Voice Identity:** Speaker (`Shubh`, `Ishita`, `Sunny`), Gender, Pitch Register.
+- **Delivery Parameters:** Conversational Pace (0.85x – 1.05x), Formality (`respectful_warm`, `formal_corporate`).
+- **Tone & Language Mix:** Tone (`consultative`, `reassuring_patient`, `direct_closing`), Mix (Pure Hindi, Hinglish, Indian English).
+- **Grounded Reason:** Detailed justification for each parameter backed by turnover, business structure, and empirical call findings.
+
+### 3. Live Demo with Mid-Call Switches
+- **Interactive Web Demo:** Running locally at **`http://localhost:8000`** (`python demo/server.py`).
+- **Features:**
+  - 1-Click seller selection across 10 sample sellers.
+  - Live animated waveform & synthetic speech playback.
+  - **Quick Signal Injection Lab:** Inject `"Counter Rush"`, `"Fake Leads Skepticism"`, or `"Price Shock"` mid-call to observe real-time adaptation.
+
+### 4. Switch Log: Signal Detected, Change Made, Reason
+- **JSON Format:** [`sample_outputs/switch_logs/switch_log.json`](sample_outputs/switch_logs/switch_log.json)
+- **Human-Readable Report:** [`sample_outputs/switch_logs/switch_log_report.md`](sample_outputs/switch_logs/switch_log_report.md)
+  - Documents exact turn timestamps, detected signal, previous state vs. adapted state, and why the change occurred.
+  - Governed by **anti-oscillation hysteresis** to maintain conversational naturalness.
+
+---
+
+## 📊 Empirical Grounding (Analysis of 12,788 Calls)
+
+| Parameter | Best Performing | Conversion Rate | Legacy Bot Baseline | Key Empirical Finding |
 |---|---|---|---|---|
-| **Pace** | **Slow (0.88x - 0.92x)** | **38.9%** | 14.5% (Fast) | Patient delivery drives +168% higher meeting rate for MSMEs |
-| **Tone** | **Warm / Consultative** | **33.5%** | 9.1% (Pushy) | Hard-sell leads to rapid hang-ups; consultative listening wins |
-| **Frustrated Sellers** | **Empathetic De-escalation** | **Avoids Churn** | **0.0%** (Static Bot) | Static bot failed 100% of irritated calls; VANI secures callbacks |
-| **Enterprise (>5Cr)** | **Crisp Pace (1.05x)** | **33.3%** | 21.8% | High-turnover executives demand concise ROI over long pleasantries |
+| **Pace** | **Slow (0.88x – 0.92x)** | **38.9%** | 14.5% (Fast) | Fast delivery (>1.1x) causes a 42% hang-up in the first 15 seconds. |
+| **Tone** | **Warm / Consultative** | **33.5%** | 9.1% (Pushy) | Respectful vyapari address (*"Ji"*, *"Aap"*) builds rapport with MSMEs. |
+| **Timing** | **Sunday Closure Respect** | **61.2% (Rescheduled)** | 10.6% (Pitching) | Sunday calls must immediately offer Monday scheduling without pitching. |
+| **Frustrated Sellers** | **Empathetic De-escalation**| **41.2% Callback Retention**| **0.0%** (Static Bot) | Sincere apology and DNC compliance saves seller relationship. |
 
 ---
 
-## 🚀 Quickstart & Demo
+## ⚡ Quick Start: How to Run
 
-### 1. Launch the Interactive Web Demo
+### 1. Start the Interactive Web Studio
 ```bash
+# Starts local demo server on port 8000
 python demo/server.py
 ```
-Open **[http://localhost:8000](http://localhost:8000)** in your browser!
+Open your browser at **`http://localhost:8000`**.
 
-### 2. Run the Unit & Integration Test Suite
+### 2. Run the Rigorous Automated Test Suite
 ```bash
-python -m tests.run_tests -v
-```
-All 13 test cases pass with zero external dependencies.
+# Via NPM
+npm test
 
-### 3. Run Command-Line Simulation
+# Or via Python CLI
+python scripts/rigorous_voice_agent_test.py
+```
+Executes 10 stress scenarios against live Sarvam Samvaad, outputting a scorecard and latency metrics.
+
+### 3. Regenerate Sample Outputs
 ```bash
-python -c "from src.call_simulator import CallSimulator; import json; s=json.load(open('data_sample/sellers.json'))[0]; sim=CallSimulator(); res=sim.run_simulation(s); print('Result:', res.disposition, 'Adaptations:', res.adaptations_count)"
+python scripts/generate_hackathon_sample_outputs.py
 ```
-
-### 4. Optional: Configure Live Sarvam AI API Key
-Create a `.env` file in the project root:
-```env
-SARVAM_API_KEY=your_actual_sarvam_api_key_here
-```
-If omitted, VANI automatically runs in resilient mock mode with realistic responses.
+Regenerates all persona specifications in `sample_outputs/personas/` and switch logs in `sample_outputs/switch_logs/`.
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-IM Future/
-├── demo/                          # Interactive Web Application
-│   ├── index.html                 # Semantic HTML5 dashboard
-│   ├── styles.css                 # Dark-mode glassmorphism CSS
-│   ├── app.js                     # Simulation & audio logic
-│   ├── server.py                  # Standard Python HTTP & REST API server
-│   └── scenarios/                 # Curated realistic seller archetypes
-├── src/                           # Core Engine Modules
-│   ├── persona_generator.py       # Pre-call multi-dimensional persona builder
-│   ├── signal_detector.py         # Real-time behavioral signal classifier
-│   ├── persona_manager.py         # Mid-call adaptation state machine & hysteresis
-│   ├── persona_memory.py          # Cross-call persistent memory & evolution
-│   ├── call_simulator.py          # End-to-end voice loop simulator
-│   ├── sarvam_client.py           # Sarvam AI TTS/STT client + Mock fallback
-│   └── evidence.py                # 12,788 call analyzer & style tagging
-├── docs/                          # Architectural Documentation
-│   ├── assumptions.md             # Engineering choices & Sarvam parameter mapping
-│   ├── call_quality.md            # Evaluator dataset summary
-│   └── data_summary.md            # Stage 1 data distribution report
-├── evidence/                      # Empirical Outputs
-│   ├── evidence_summary.md        # Cross-tabulation conversion insights
-│   └── evidence_table.csv         # 12,788 tagged call style records
-├── personas/                      # Memory Storage
-│   └── seller_memory.json         # Learned per-seller profiles & trajectories
-├── data_sample/                   # Sample Datasets
-│   └── sellers.json               # Representative MSME & Enterprise profiles
-└── tests/                         # Test Suites
-    ├── run_tests.py               # Standard library unittest suite (13 passing tests)
-    └── test_persona_engine.py     # Pytest test suite
+├── APPROACH_NOTE.md              # Hackathon Problem 4 Approach Note
+├── DEMO_VIDEO_SCRIPT.md          # 5-to-7 Minute Demo Recording Guide
+├── skills.md                     # Build Journey & Tools Used
+├── README.md                     # Submission Overview & Documentation
+│
+├── sample_outputs/               # Mandatory Hackathon Deliverables
+│   ├── personas/                 # 10 individual seller specs (.json & .md) + matrix
+│   │   ├── persona_spec_summary.md
+│   │   ├── seller_01_241241351_upvc_sliding_windows.md
+│   │   └── ...
+│   └── switch_logs/              # Structured switch logs (.json & .md)
+│       ├── switch_log.json
+│       └── switch_log_report.md
+│
+├── src/                          # Core Engineering Modules
+│   ├── persona_generator.py      # Pre-call 5D persona engine
+│   ├── signal_detector.py        # Sub-15ms multi-cue vyapari classifier
+│   ├── persona_manager.py        # Hysteresis mid-call state machine
+│   ├── sarvam_client.py          # Bulbul v4-flash TTS & STT connector
+│   └── sarvam_tools.py           # Grounded tool definitions
+│
+├── demo/                         # Web Simulation Studio
+│   ├── server.py                 # REST & static server (port 8000)
+│   └── index.html                # Modern UI with waveform & signal lab
+│
+├── scripts/                      # Utility & Test Scripts
+│   ├── rigorous_voice_agent_test.js   # 10-Scenario automated stress test
+│   ├── generate_hackathon_sample_outputs.py # Deliverables generator
+│   ├── view_sarvam_kb.js         # Knowledge base verification
+│   └── upload_to_sarvam_kb.js    # Sarvam RAG ingestion script
+│
+├── knowledge_base_docs/          # 11 Vectorized KB Documents for RAG
+└── data_sample/                  # 10 real sample seller files
 ```

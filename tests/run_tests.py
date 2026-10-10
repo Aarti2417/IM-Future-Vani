@@ -192,6 +192,55 @@ class TestPersonaEngine(unittest.TestCase):
         finally:
             shutil.rmtree(temp_dir, ignore_errors=True)
 
+    def test_sarvam_tools(self):
+        from src.sarvam_tools import (
+            get_seller_profile,
+            get_verified_buyer_leads,
+            get_official_pricing,
+            book_relationship_manager_slot,
+            check_dnd_compliance
+        )
+        # 1. Profile lookup
+        prof = get_seller_profile("241241351")
+        self.assertIn("top_category", prof)
+        self.assertIn("annual_turnover", prof)
+
+        # 2. Verified buyer leads
+        leads = get_verified_buyer_leads("Cotton Yarn", "Surat")
+        self.assertGreater(leads["active_verified_buyers"], 0)
+        self.assertIn("Surat", leads["high_demand_clusters"])
+        self.assertIn("100% Mobile OTP", leads["verification_standard"])
+
+        # 3. Official pricing
+        pricing = get_official_pricing("0 - 40 L")
+        self.assertEqual(pricing["recommended_package"], "Mini Leader")
+        self.assertIn("Mini Leader", pricing["tiers"])
+        self.assertEqual(pricing["tiers"]["Mini Leader"]["annual_cost_inr"], 28000)
+
+        # 4. Appointment booking
+        booking = book_relationship_manager_slot("241241351", "Monday", "11:00 AM", "phone")
+        self.assertEqual(booking["status"], "confirmed")
+        self.assertIn("IM-RM-", booking["booking_id"])
+
+        # 5. DND Compliance
+        dnd = check_dnd_compliance("241241351")
+        self.assertTrue(dnd["calling_window_allowed"])
+        self.assertIn("09:00 AM - 08:00 PM IST", dnd["calling_hours"])
+
+    def test_sarvam_agent_spec(self):
+        spec_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "sarvam_agent_spec.json")
+        self.assertTrue(os.path.exists(spec_path))
+        with open(spec_path, "r", encoding="utf-8") as f:
+            spec = json.load(f)
+        self.assertEqual(spec["agent_name"], "IndiaMART VANI Voice Agent")
+        self.assertEqual(spec["model_config"]["model"], "sarvam-105b-conversations")
+        self.assertEqual(spec["voice_config"]["model"], "bulbul:v4-flash")
+        self.assertIn("shubh_enhi_ads", spec["voice_config"]["speaker"])
+        self.assertGreaterEqual(len(spec["model_config"]["tools"]), 5)
+        self.assertIn("on_start", spec["hooks"])
+        self.assertIn("on_end", spec["hooks"])
+
 
 if __name__ == "__main__":
     unittest.main()
+

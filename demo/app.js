@@ -161,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initPersonaStudio();
   initSignalLab();
   initMemoryTab();
+  initSarvamTab();
   checkBackendStatus();
 });
 
@@ -1935,4 +1936,160 @@ function initRoleplaySimulator() {
     });
   }
 }
+
+// ── Sarvam Voice Agents (Samvaad) Playground ───────────────
+function initSarvamTab() {
+  const btnSpec = document.getElementById("btn-load-spec");
+  const specViewer = document.getElementById("sarvam-spec-viewer");
+  const outputElem = document.getElementById("sarvam-test-output");
+  const statusElem = document.getElementById("sarvam-test-status");
+  const labelElem = document.getElementById("sarvam-test-label");
+
+  async function loadSpec() {
+    try {
+      const res = await fetch("/api/sarvam/agent-spec");
+      if (res.ok) {
+        const spec = await res.json();
+        if (specViewer) specViewer.textContent = JSON.stringify(spec, null, 2);
+      } else {
+        if (specViewer) specViewer.textContent = "Agent spec not found on server.";
+      }
+    } catch (e) {
+      if (specViewer) specViewer.textContent = "Error loading spec: " + e.message;
+    }
+  }
+
+  if (btnSpec) btnSpec.addEventListener("click", loadSpec);
+
+  // Hook test buttons
+  const btnOnStart = document.getElementById("btn-test-onstart");
+  if (btnOnStart) {
+    btnOnStart.addEventListener("click", async () => {
+      if (labelElem) labelElem.textContent = "Testing On-Start Hook (POST /webhook/on-start)...";
+      if (statusElem) {
+        statusElem.textContent = "Executing...";
+        statusElem.className = "chip chip-sm";
+      }
+      try {
+        const res = await fetch("/webhook/on-start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ seller_id: "241241351", phone_number: "+919876543210" })
+        });
+        const data = await res.json();
+        if (outputElem) outputElem.textContent = JSON.stringify(data, null, 2);
+        if (statusElem) {
+          statusElem.textContent = "200 OK";
+          statusElem.className = "chip chip-sm chip-highlight";
+        }
+      } catch (err) {
+        if (outputElem) outputElem.textContent = JSON.stringify({ error: err.message }, null, 2);
+        if (statusElem) statusElem.textContent = "Error";
+      }
+    });
+  }
+
+  const btnLeads = document.getElementById("btn-test-leads");
+  if (btnLeads) {
+    btnLeads.addEventListener("click", async () => {
+      if (labelElem) labelElem.textContent = "Testing Tool: Verified Buyer Leads (POST /api/tools/buyer_leads)...";
+      if (statusElem) statusElem.textContent = "Executing...";
+      try {
+        const res = await fetch("/api/tools/buyer_leads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ category: "Cotton Yarn", state_or_city: "Surat" })
+        });
+        const data = await res.json();
+        if (outputElem) outputElem.textContent = JSON.stringify(data, null, 2);
+        if (statusElem) {
+          statusElem.textContent = "200 OK";
+          statusElem.className = "chip chip-sm chip-highlight";
+        }
+      } catch (err) {
+        if (outputElem) outputElem.textContent = JSON.stringify({ error: err.message }, null, 2);
+      }
+    });
+  }
+
+  const btnPricing = document.getElementById("btn-test-pricing");
+  if (btnPricing) {
+    btnPricing.addEventListener("click", async () => {
+      if (labelElem) labelElem.textContent = "Testing Tool: Official Pricing (POST /api/tools/pricing)...";
+      if (statusElem) statusElem.textContent = "Executing...";
+      try {
+        const res = await fetch("/api/tools/pricing", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ turnover: "0 - 40 L" })
+        });
+        const data = await res.json();
+        if (outputElem) outputElem.textContent = JSON.stringify(data, null, 2);
+        if (statusElem) {
+          statusElem.textContent = "200 OK";
+          statusElem.className = "chip chip-sm chip-highlight";
+        }
+      } catch (err) {
+        if (outputElem) outputElem.textContent = JSON.stringify({ error: err.message }, null, 2);
+      }
+    });
+  }
+
+  const btnBooking = document.getElementById("btn-test-booking");
+  if (btnBooking) {
+    btnBooking.addEventListener("click", async () => {
+      if (labelElem) labelElem.textContent = "Testing Tool: Book RM Slot (POST /api/tools/book_slot)...";
+      if (statusElem) statusElem.textContent = "Executing...";
+      try {
+        const res = await fetch("/api/tools/book_slot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ seller_id: "241241351", date: "Monday", time_slot: "11:00 AM", channel: "phone" })
+        });
+        const data = await res.json();
+        if (outputElem) outputElem.textContent = JSON.stringify(data, null, 2);
+        if (statusElem) {
+          statusElem.textContent = "200 OK";
+          statusElem.className = "chip chip-sm chip-highlight";
+        }
+      } catch (err) {
+        if (outputElem) outputElem.textContent = JSON.stringify({ error: err.message }, null, 2);
+      }
+    });
+  }
+
+  const btnOnEnd = document.getElementById("btn-test-onend");
+  if (btnOnEnd) {
+    btnOnEnd.addEventListener("click", async () => {
+      if (labelElem) labelElem.textContent = "Testing On-End Hook (POST /webhook/on-end)...";
+      if (statusElem) statusElem.textContent = "Executing...";
+      try {
+        const res = await fetch("/webhook/on-end", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            seller_id: "241241351",
+            call_disposition: "meeting_fixed",
+            primary_objection: "none",
+            duration_sec: 145.0,
+            baseline_pace: 0.92,
+            final_pace: 0.95
+          })
+        });
+        const data = await res.json();
+        if (outputElem) outputElem.textContent = JSON.stringify(data, null, 2);
+        if (statusElem) {
+          statusElem.textContent = "Memory Evolved!";
+          statusElem.className = "chip chip-sm chip-highlight";
+        }
+      } catch (err) {
+        if (outputElem) outputElem.textContent = JSON.stringify({ error: err.message }, null, 2);
+      }
+    });
+  }
+
+  // Auto-load spec on start
+  loadSpec();
+}
+
 

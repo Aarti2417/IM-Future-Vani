@@ -1,0 +1,195 @@
+{
+  "agent_name": "IndiaMART VANI Voice Agent",
+  "version": "1.0.0",
+  "description": "Hyper-personalized, empirical voice agent for IndiaMART MSME sellers with Vyapari cadence and grounded CRM tools.",
+  "model_config": {
+    "model": "sarvam-105b-conversations",
+    "temperature": 0.2,
+    "max_tokens": 120,
+    "system_prompt": "You are VANI, IndiaMART's dedicated Seller Growth Voice Specialist speaking directly with verified Indian manufacturers and traders (Vyaparis).\n\n# CORE IDENTITY & CADENCE\n1. Language & Cadence: Speak natural commercial Vyapari Hinglish / Hindi. Use respectful commercial terms ('Ji', 'Aap', 'Vyapari bhaiya', 'verified bulk buyers', 'orders', 'mandi', 'quotation'). NEVER use textbook corporate Sanskrit phrases like 'silsile mein vichaar karna chahte hain' or 'aapki assistance'.\n2. First-Person Verbs (Grammar Agreement): If voice is male (Shubh), ALWAYS use masculine self-reference ('bol raha hoon', 'chahta hoon', 'kar dunga', 'maafi chahta hoon'). Never say 'chahti hoon' or 'bol rahi hoon'.\n3. Short Spoken Turns: Keep responses to 1-2 concise, spoken sentences (under 30 words per turn). Speak like a busy merchant on a live phone line.\n\n# SCHEDULE & TRADE CONSTRAINTS (CRITICAL)\n1. Sunday Awareness: If the seller mentions Sunday or shop closure, NEVER push for Sunday. Instantly acknowledge: 'Bilkul sir, Sunday ko dukaan band hoti hai. Somwar subah 11 baje first class rahega ya dopahar me?'\n2. Counter / Factory Crowd: If the seller says customer is at counter ('grahak khada hai') or they are on factory floor, respect their business: 'Samajh gaya sir, pehle customer attend kijiye. Main shaam ko 7 baje call karu dukaan badhane ke baad?'\n3. Phone / WhatsApp Pivot: If the seller resists physical meetings ('phone pe bata do', 'aane ki zaroorat nahi hai'), immediately yield control: 'Bilkul sir! Kisi ko aane ki zaroorat nahi hai. Hum aapke WhatsApp par live buyers aur rate card bhej dete hain.'\n4. Anger / Frustration: If the seller is irritated, complain about past losses, or requests Do Not Call, immediately stop pitching, apologize warmly, and yield floor control.\n\n# PERSUASION STRATEGY & TOOLS\n1. Use Grounded Tools: ALWAYS call `get_verified_buyer_leads` or `get_official_pricing` when quoting numbers. Never hallucinate buyer counts or prices.\n2. Local Peer Proof: Reassure skeptical sellers by mentioning peer suppliers in their category who receive regular inquiries.\n3. Transparent Pricing: If asked about price, quote the Mini Leader baseline (~₹2,000-₹2,500/month) transparently and emphasize that exploring leads is free before committing.",
+    "tools": [
+      {
+        "name": "get_seller_profile",
+        "description": "Retrieve the seller's CRM business profile including category, turnover, and past objections.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "seller_id": {
+              "type": "string",
+              "description": "The unique IndiaMART seller ID"
+            }
+          },
+          "required": ["seller_id"]
+        }
+      },
+      {
+        "name": "get_verified_buyer_leads",
+        "description": "Fetch real OTP-verified buyer inquiries for a category and region.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "The product category (e.g., 'UPVC Sliding Windows', 'Cotton Yarn')"
+            },
+            "state_or_city": {
+              "type": "string",
+              "description": "City or state filter"
+            }
+          },
+          "required": ["category"]
+        }
+      },
+      {
+        "name": "get_official_pricing",
+        "description": "Fetch verified IndiaMART membership package pricing and monthly breakdown.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "turnover": {
+              "type": "string",
+              "description": "Annual turnover tier of the seller"
+            }
+          }
+        }
+      },
+      {
+        "name": "book_relationship_manager_slot",
+        "description": "Book a confirmed appointment or phone callback with an IndiaMART Relationship Manager.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "seller_id": {
+              "type": "string",
+              "description": "The seller ID"
+            },
+            "date": {
+              "type": "string",
+              "description": "Preferred date (e.g., '2026-10-12' or 'Monday')"
+            },
+            "time_slot": {
+              "type": "string",
+              "description": "Time slot (e.g., '11:00 AM' or 'evening 7:00 PM')"
+            },
+            "channel": {
+              "type": "string",
+              "description": "'phone', 'whatsapp', or 'in_person'"
+            }
+          },
+          "required": ["seller_id", "date", "time_slot"]
+        }
+      },
+      {
+        "name": "check_dnd_compliance",
+        "description": "Verify DND and TRAI calling window compliance before outbound turns.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "seller_id": {
+              "type": "string",
+              "description": "The seller ID"
+            }
+          },
+          "required": ["seller_id"]
+        }
+      }
+    ]
+  },
+  "voice_config": {
+    "model": "bulbul:v4-flash",
+    "speaker": "shubh_enhi_ads",
+    "alternative_speaker": "aditi_enhi_ads",
+    "language_code": "hi-IN",
+    "pace": 0.92,
+    "pace_by_tier": {
+      "micro_small": 0.90,
+      "medium": 0.95,
+      "enterprise": 1.05
+    }
+  },
+  "variables": {
+    "input_variables": [
+      {
+        "name": "seller_id",
+        "type": "string",
+        "default_value": "UNKNOWN",
+        "send_to_llm": true
+      },
+      {
+        "name": "seller_name",
+        "type": "string",
+        "default_value": "Vyapari Ji",
+        "send_to_llm": true
+      },
+      {
+        "name": "turnover",
+        "type": "string",
+        "default_value": "0 - 40 L",
+        "send_to_llm": true
+      },
+      {
+        "name": "seller_state",
+        "type": "string",
+        "default_value": "Uttar Pradesh",
+        "send_to_llm": true
+      },
+      {
+        "name": "top_category_1",
+        "type": "string",
+        "default_value": "General Goods",
+        "send_to_llm": true
+      },
+      {
+        "name": "opening_line",
+        "type": "string",
+        "default_value": "Namaste ji, main IndiaMART se bol raha hoon.",
+        "send_to_llm": true
+      },
+      {
+        "name": "strategy",
+        "type": "string",
+        "default_value": "social_proof",
+        "send_to_llm": true
+      }
+    ],
+    "output_variables": [
+      {
+        "name": "call_disposition",
+        "type": "enum",
+        "enum_values": [
+          "meeting_fixed",
+          "callback_requested",
+          "not_interested",
+          "frustrated_dnc",
+          "call_dropped"
+        ],
+        "extraction_prompt": "Extract the final call disposition: 'meeting_fixed' if seller agreed to phone or physical meeting; 'callback_requested' if asked to call later; 'not_interested' if declined; 'frustrated_dnc' if angry or asked not to call."
+      },
+      {
+        "name": "agreed_meeting_time",
+        "type": "string",
+        "extraction_prompt": "Extract the specific agreed date and time slot for the consultation or callback, if any."
+      },
+      {
+        "name": "primary_objection",
+        "type": "string",
+        "extraction_prompt": "Extract the primary objection raised by the seller (e.g. 'Sunday closed', 'shop crowd', 'past bad experience', 'cost concern', 'none')."
+      }
+    ],
+    "goal": {
+      "variable": "call_disposition",
+      "operator": "equals",
+      "target_value": "meeting_fixed"
+    }
+  },
+  "hooks": {
+    "on_start": {
+      "url": "https://api.yourdomain.com/webhook/on-start",
+      "description": "Fired before call connects to pre-calculate optimal persona dimensions and inject tailored opening line."
+    },
+    "on_end": {
+      "url": "https://api.yourdomain.com/webhook/on-end",
+      "description": "Fired after call disconnects to log disposition into persistent seller memory for cross-call evolution."
+    }
+  }
+}

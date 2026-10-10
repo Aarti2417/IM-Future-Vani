@@ -26,6 +26,13 @@ from src.persona_memory import PersonaMemoryStore
 from src.call_simulator import CallSimulator
 from src.dialogue_engine import DialogueEngine
 from src.sarvam_client import get_sarvam_client, MockSarvamClient, VOICE_CATALOG
+from src.sarvam_tools import (
+    get_seller_profile,
+    get_verified_buyer_leads,
+    get_official_pricing,
+    book_relationship_manager_slot,
+    check_dnd_compliance
+)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -136,6 +143,30 @@ class VaniDemoHandler(SimpleHTTPRequestHandler):
                     "indiamart://knowledge/b2b-objection-playbook",
                     "indiamart://pricing/rate-card"
                 ]
+            })
+        elif path == "/api/sarvam/agent-spec":
+            spec_path = os.path.join(BASE_DIR, "sarvam_agent_spec.json")
+            if os.path.exists(spec_path):
+                with open(spec_path, "r", encoding="utf-8") as f:
+                    self._send_json(json.load(f))
+            else:
+                self._send_error(404, "sarvam_agent_spec.json not found")
+        elif path == "/api/sarvam/status":
+            self._send_json({
+                "status": "ready",
+                "connected_platform": "Sarvam Voice Agents (Samvaad)",
+                "agent_name": "IndiaMART VANI Voice Agent",
+                "tools_available": [
+                    "get_seller_profile",
+                    "get_verified_buyer_leads",
+                    "get_official_pricing",
+                    "book_relationship_manager_slot",
+                    "check_dnd_compliance"
+                ],
+                "webhooks": {
+                    "on_start": "/webhook/on-start",
+                    "on_end": "/webhook/on-end"
+                }
             })
         else:
             # Fall back to serving static files from DEMO_DIR
@@ -358,6 +389,78 @@ class VaniDemoHandler(SimpleHTTPRequestHandler):
                 memory_store._memories = {}
                 memory_store._save()
                 self._send_json({"status": "ok", "message": "Memory reset successfully"})
+
+            # ── Sarvam Voice Agents Webhooks & Grounded Tools ──
+            elif path == "/webhook/on-start" or path == "/api/sarvam/on-start":
+                seller_id = str(data.get("seller_id") or data.get("phone_number") or "241241351")
+                profile = get_seller_profile(seller_id)
+                persona = generator.generate_persona({
+                    "fk_glusr_usr_id": seller_id,
+                    "annual_turnover": profile.get("annual_turnover"),
+                    "seller_state": profile.get("seller_state"),
+                    "business_type": profile.get("business_type"),
+                    "top_category_1": profile.get("top_category"),
+                    "past_objections": profile.get("past_objections"),
+                    "showed_frustration": 1 if profile.get("showed_frustration") else 0
+                })
+                persona = memory_store.apply_memory_to_persona(persona)
+                variables_out = {
+                    "seller_id": seller_id,
+                    "seller_name": profile.get("seller_name", "Vyapari Ji"),
+                    "turnover": profile.get("annual_turnover", "0 - 40 L"),
+                    "seller_state": profile.get("seller_state", "Uttar Pradesh"),
+                    "top_category_1": profile.get("top_category", "General Goods"),
+                    "opening_line": persona.opening_line,
+                    "strategy": persona.script_strategy,
+                    "baseline_pace": persona.pace
+                }
+                self._send_json({
+                    "status": "success",
+                    "variables": variables_out,
+                    "persona_rationale": persona.rationale
+                })
+
+            elif path == "/webhook/on-end" or path == "/api/sarvam/on-end":
+                seller_id = str(data.get("seller_id") or "UNKNOWN")
+                disposition = str(data.get("call_disposition") or data.get("disposition") or "general")
+                objection = str(data.get("primary_objection") or data.get("objection") or "")
+                duration = float(data.get("duration_sec") or 0.0)
+                is_success = disposition in ["meeting_fixed", "callback_requested", "agreed_to_resume"]
+                memory_store.record_call_outcome(
+                    seller_id=seller_id,
+                    disposition=disposition,
+                    success=is_success,
+                    initial_persona={"pace": data.get("baseline_pace", 0.92)},
+                    final_persona={"pace": data.get("final_pace", 0.92)},
+                    signals=[data.get("signal", "neutral")],
+                    notes=f"Primary objection: {objection}. Call duration: {duration}s"
+                )
+                self._send_json({
+                    "status": "recorded",
+                    "seller_id": seller_id,
+                    "disposition": disposition,
+                    "success": is_success
+                })
+
+            elif path == "/api/tools/seller_profile":
+                self._send_json(get_seller_profile(data.get("seller_id") or data.get("phone", "")))
+
+            elif path == "/api/tools/buyer_leads":
+                self._send_json(get_verified_buyer_leads(data.get("category", "General Goods"), data.get("state_or_city", "")))
+
+            elif path == "/api/tools/pricing":
+                self._send_json(get_official_pricing(data.get("turnover", "")))
+
+            elif path == "/api/tools/book_slot":
+                self._send_json(book_relationship_manager_slot(
+                    data.get("seller_id", "UNKNOWN"),
+                    data.get("date", "Tomorrow"),
+                    data.get("time_slot", "11:00 AM"),
+                    data.get("channel", "phone")
+                ))
+
+            elif path == "/api/tools/compliance":
+                self._send_json(check_dnd_compliance(data.get("seller_id", "UNKNOWN")))
 
             else:
                 self._send_error(404, f"Endpoint {path} not found")

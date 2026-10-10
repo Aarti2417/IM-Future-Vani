@@ -1,0 +1,6284 @@
+{
+  "$defs": {
+    "APIConfig": {
+      "properties": {
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Params",
+          "type": "object"
+        },
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Headers",
+          "type": "object"
+        },
+        "body": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Body",
+          "type": "object"
+        }
+      },
+      "required": [
+        "url",
+        "method"
+      ],
+      "title": "APIConfig",
+      "type": "object"
+    },
+    "AppKnowledgeBaseConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "knowledge_query": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/KnowledgeBaseQueryConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "AppKnowledgeBaseConfig",
+      "type": "object"
+    },
+    "AssistantDynamicNudgeMessageConfig": {
+      "description": "Dynamically generates a message with a prompt",
+      "properties": {
+        "timeout_seconds": {
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "nudge_type": {
+          "const": "assistant_dynamic",
+          "default": "assistant_dynamic",
+          "title": "Nudge Type",
+          "type": "string"
+        },
+        "prompt": {
+          "description": "Prompt to generate message",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "title": "Prompt",
+          "type": "array"
+        }
+      },
+      "required": [
+        "timeout_seconds",
+        "prompt"
+      ],
+      "title": "AssistantDynamicNudgeMessageConfig",
+      "type": "object"
+    },
+    "AssistantStaticNudgeMessageConfig": {
+      "description": "Repeats the same message as previous assistant message",
+      "properties": {
+        "timeout_seconds": {
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "nudge_type": {
+          "const": "assistant_static",
+          "default": "assistant_static",
+          "title": "Nudge Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "timeout_seconds"
+      ],
+      "title": "AssistantStaticNudgeMessageConfig",
+      "type": "object"
+    },
+    "BackgroundSound": {
+      "properties": {
+        "enabled": {
+          "default": false,
+          "description": "Enable background noise mixing",
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "noise_type": {
+          "$ref": "#/$defs/BackgroundSoundStyle",
+          "default": "quiet_office",
+          "description": "Type of background noise to apply"
+        },
+        "volume_dbfs": {
+          "default": -40.0,
+          "description": "Background noise volume in dBFS (-60 to 0 range)",
+          "maximum": 0.0,
+          "minimum": -60.0,
+          "title": "Volume Dbfs",
+          "type": "number"
+        }
+      },
+      "title": "BackgroundSound",
+      "type": "object"
+    },
+    "BackgroundSoundStyle": {
+      "enum": [
+        "call_center",
+        "city_traffic",
+        "quiet_office"
+      ],
+      "title": "BackgroundSoundStyle",
+      "type": "string"
+    },
+    "BaseAgentConfig": {
+      "properties": {
+        "global_prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Main goal/task prompt used for all states",
+          "title": "Global Prompt"
+        },
+        "response_style": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Response style which can include personality, stylization, guardrails, guidelines, etc.",
+          "title": "Response Style"
+        },
+        "global_context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Generic background context like about the organization, it's product/services, etc.",
+          "title": "Global Context"
+        },
+        "global_tool_names": {
+          "default": [],
+          "description": "list of tools to be made available globally across states",
+          "items": {
+            "type": "string"
+          },
+          "title": "Global Tool Names",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "system_prompt_role": {
+          "default": "system",
+          "description": "Usually system, can be user too",
+          "title": "System Prompt Role",
+          "type": "string"
+        },
+        "system_prompt_template": {
+          "default": "",
+          "description": "Template for the system prompt",
+          "title": "System Prompt Template",
+          "type": "string"
+        },
+        "agent_variables": {
+          "additionalProperties": {
+            "$ref": "#/$defs/VariableConfig"
+          },
+          "default": {},
+          "description": "Agent variables",
+          "title": "Agent Variables",
+          "type": "object"
+        },
+        "internal_variables": {
+          "additionalProperties": {
+            "$ref": "#/$defs/VariableConfig"
+          },
+          "default": {},
+          "description": "Internal variables",
+          "title": "Internal Variables",
+          "type": "object"
+        },
+        "kb_config": {
+          "additionalProperties": {
+            "$ref": "#/$defs/KnowledgeBaseConfig"
+          },
+          "default": {},
+          "description": "Knowledge base",
+          "title": "Kb Config",
+          "type": "object"
+        },
+        "knowledge_base_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AppKnowledgeBaseConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "states": {
+          "additionalProperties": {
+            "$ref": "#/$defs/StateConfig"
+          },
+          "description": "State configs",
+          "title": "States",
+          "type": "object"
+        },
+        "initial_state_name": {
+          "description": "Name of the initial state",
+          "title": "Initial State Name",
+          "type": "string"
+        },
+        "enable_structured_prompt": {
+          "default": false,
+          "description": "Enable structured prompt",
+          "title": "Enable Structured Prompt",
+          "type": "boolean"
+        },
+        "enable_lid": {
+          "default": false,
+          "description": "Enable language identification",
+          "title": "Enable Lid",
+          "type": "boolean"
+        },
+        "enable_voicemail_detection": {
+          "default": false,
+          "description": "Enable voicemail detection",
+          "title": "Enable Voicemail Detection",
+          "type": "boolean"
+        },
+        "send_multiple_messages": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Send multiple messages",
+          "title": "Send Multiple Messages"
+        },
+        "supported_languages": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/LanguageName"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "List of supported languages",
+          "title": "Supported Languages"
+        },
+        "thread_window": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of messages to consider for structured content and tool callsNone defaults to 15",
+          "title": "Thread Window"
+        },
+        "structured_content_thread_window": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of messages to consider for structured contentNone defaults to 15. Note that this should always equal thread_window",
+          "title": "Structured Content Thread Window"
+        },
+        "tool_calls_thread_window": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Number of messages to consider for tool calls. None defaults to 15",
+          "title": "Tool Calls Thread Window"
+        },
+        "token_based_truncation": {
+          "default": true,
+          "title": "Token Based Truncation",
+          "type": "boolean"
+        },
+        "allow_mid_call_variable_update": {
+          "default": true,
+          "description": "If False, the mid-call `update_variables` tool is not surfaced to the LLM. Defaults True to preserve existing behavior.",
+          "title": "Allow Mid Call Variable Update",
+          "type": "boolean"
+        },
+        "agent_can_end_interaction": {
+          "default": true,
+          "description": "Whether the agent can end the interaction",
+          "title": "Agent Can End Interaction",
+          "type": "boolean"
+        },
+        "is_single_prompt_mode": {
+          "default": false,
+          "description": "Whether the agent is in single prompt mode",
+          "title": "Is Single Prompt Mode",
+          "type": "boolean"
+        },
+        "translate_language": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/LanguageName"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "List of languages to use for translation",
+          "title": "Translate Language"
+        },
+        "memory_context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Context of previous calls",
+          "title": "Memory Context"
+        },
+        "has_updated_post_call_datatypes": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Whether the agent has well-defined post call datatypes",
+          "title": "Has Updated Post Call Datatypes"
+        }
+      },
+      "required": [
+        "states",
+        "initial_state_name"
+      ],
+      "title": "BaseAgentConfig",
+      "type": "object"
+    },
+    "CallTransferConfig": {
+      "description": "Configuration for the call_transfer tool.",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/CallTransferType",
+          "description": "Transfer mode: blind or warm"
+        },
+        "destination": {
+          "description": "Transfer destination (phone number or SIP URI)",
+          "discriminator": {
+            "mapping": {
+              "dynamic": "#/$defs/CallTransferDynamicDestination",
+              "phone": "#/$defs/CallTransferPhoneDestination",
+              "sip_uri": "#/$defs/CallTransferSipUriDestination"
+            },
+            "propertyName": "type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/CallTransferPhoneDestination"
+            },
+            {
+              "$ref": "#/$defs/CallTransferSipUriDestination"
+            },
+            {
+              "$ref": "#/$defs/CallTransferDynamicDestination"
+            }
+          ],
+          "title": "Destination"
+        },
+        "sip_headers": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/CallTransferSipHeader"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional SIP headers to include on the transfer",
+          "title": "Sip Headers"
+        },
+        "post_dial_digits": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CallTransferValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional DTMF digits to send after the destination answers"
+        }
+      },
+      "required": [
+        "type",
+        "destination"
+      ],
+      "title": "CallTransferConfig",
+      "type": "object"
+    },
+    "CallTransferDynamicDestination": {
+      "description": "Dynamic destination whose type (PSTN vs. SIP) is inferred at runtime.\n\nThe value must be a dynamic variable reference. When the resolved value is\nan E.164 phone number, it is treated as a PSTN destination; any other value\nis treated as a SIP URI.",
+      "properties": {
+        "type": {
+          "const": "dynamic",
+          "default": "dynamic",
+          "title": "Type",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/CallTransferValue",
+          "description": "Dynamic variable reference; resolved value is treated as PSTN or SIP."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "CallTransferDynamicDestination",
+      "type": "object"
+    },
+    "CallTransferPhoneDestination": {
+      "properties": {
+        "type": {
+          "const": "phone",
+          "default": "phone",
+          "title": "Type",
+          "type": "string"
+        },
+        "phone_number": {
+          "$ref": "#/$defs/CallTransferValue",
+          "description": "Phone number to transfer the call to"
+        }
+      },
+      "required": [
+        "phone_number"
+      ],
+      "title": "CallTransferPhoneDestination",
+      "type": "object"
+    },
+    "CallTransferSipHeader": {
+      "properties": {
+        "name": {
+          "description": "SIP header name",
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/CallTransferValue",
+          "description": "SIP header value"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "CallTransferSipHeader",
+      "type": "object"
+    },
+    "CallTransferSipUriDestination": {
+      "properties": {
+        "type": {
+          "const": "sip_uri",
+          "default": "sip_uri",
+          "title": "Type",
+          "type": "string"
+        },
+        "sip_uri": {
+          "$ref": "#/$defs/CallTransferValue",
+          "description": "SIP URI to transfer the call to"
+        }
+      },
+      "required": [
+        "sip_uri"
+      ],
+      "title": "CallTransferSipUriDestination",
+      "type": "object"
+    },
+    "CallTransferType": {
+      "enum": [
+        "blind",
+        "warm"
+      ],
+      "title": "CallTransferType",
+      "type": "string"
+    },
+    "CallTransferValue": {
+      "description": "A static literal or a dynamic variable reference.",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/CallTransferValueType",
+          "description": "Whether the value is a static literal or a dynamic variable name"
+        },
+        "value": {
+          "description": "Literal value when static; variable name when dynamic",
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ],
+      "title": "CallTransferValue",
+      "type": "object"
+    },
+    "CallTransferValueType": {
+      "enum": [
+        "static",
+        "dynamic"
+      ],
+      "title": "CallTransferValueType",
+      "type": "string"
+    },
+    "Condition": {
+      "description": "A single boolean predicate on a runtime variable.",
+      "properties": {
+        "variable": {
+          "minLength": 1,
+          "title": "Variable",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/Operator"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "variable",
+        "operator",
+        "value"
+      ],
+      "title": "Condition",
+      "type": "object"
+    },
+    "Criterion": {
+      "description": "One row in the Evaluation Criteria table.\n\nThe ``id`` is server-generated as ``crit_<uuid4-hex>`` on first save;\nclients echo the id they previously received and the server preserves\nit across updates.",
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Id"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "type": {
+          "$ref": "#/$defs/CriterionType",
+          "default": "rule_based"
+        },
+        "config": {
+          "$ref": "#/$defs/RuleBasedConfig"
+        }
+      },
+      "required": [
+        "name",
+        "config"
+      ],
+      "title": "Criterion",
+      "type": "object"
+    },
+    "CriterionType": {
+      "enum": [
+        "rule_based"
+      ],
+      "title": "CriterionType",
+      "type": "string"
+    },
+    "CustomAppConfig": {
+      "description": "Contains list of parameters that can be updated for an app",
+      "properties": {
+        "initial_bot_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Initial Bot Message"
+        },
+        "initial_state_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Initial State Name"
+        },
+        "initial_language_name": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LanguageName"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "speech_hotwords": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speech Hotwords"
+        },
+        "tool_llm_model_variant": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Llm Model Variant"
+        },
+        "llm_model_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Llm Model Name"
+        },
+        "enable_structured_prompt": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Enable Structured Prompt"
+        },
+        "agent_can_end_interaction": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agent Can End Interaction"
+        },
+        "thread_window": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thread Window"
+        },
+        "structured_content_thread_window": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Structured Content Thread Window"
+        },
+        "tool_calls_thread_window": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Calls Thread Window"
+        },
+        "translate_language": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/LanguageName"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Translate Language"
+        },
+        "tool_runner_parameters": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tool Runner Parameters"
+        },
+        "nudge_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CustomNudgeConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "vad_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CustomVADConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "asr_model_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asr Model Name"
+        },
+        "text_to_speech_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CustomTextToSpeechConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "skip_translate_transliterate": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Skip Translate Transliterate"
+        },
+        "default_bypass_language_pipeline": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Bypass Language Pipeline"
+        },
+        "knowledge_base_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Knowledge Base Name"
+        },
+        "knowledge_base_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Knowledge Base Description"
+        },
+        "denied_message_to_user_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeniedMessageToUserConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "CustomAppConfig",
+      "type": "object"
+    },
+    "CustomNudgeConfig": {
+      "description": "Custom nudge configuration for V2V interactions",
+      "properties": {
+        "enable_inactivity_nudge": {
+          "default": false,
+          "title": "Enable Inactivity Nudge",
+          "type": "boolean"
+        },
+        "user_nudge_message_configs": {
+          "items": {
+            "$ref": "#/$defs/CustomNudgeMessageConfig"
+          },
+          "title": "User Nudge Message Configs",
+          "type": "array"
+        },
+        "bot_nudge_message_configs": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/CustomNudgeMessageConfig"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bot Nudge Message Configs"
+        },
+        "end_interaction_after_consecutive_nudges": {
+          "default": true,
+          "title": "End Interaction After Consecutive Nudges",
+          "type": "boolean"
+        }
+      },
+      "title": "CustomNudgeConfig",
+      "type": "object"
+    },
+    "CustomNudgeMessageConfig": {
+      "description": "Custom nudge message configuration",
+      "properties": {
+        "nudge_type": {
+          "title": "Nudge Type",
+          "type": "string"
+        },
+        "timeout_seconds": {
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "template_messages": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Template Messages"
+        },
+        "multilingual_template_messages": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/MultilingualText"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Multilingual Template Messages"
+        },
+        "choice": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Choice"
+        }
+      },
+      "required": [
+        "nudge_type",
+        "timeout_seconds"
+      ],
+      "title": "CustomNudgeMessageConfig",
+      "type": "object"
+    },
+    "CustomSpeechFrameConfig": {
+      "description": "Custom speech frame configuration for V2V interactions",
+      "properties": {
+        "num_initial_ignored_frames": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Num Initial Ignored Frames"
+        },
+        "silence_duration_frames": {
+          "title": "Silence Duration Frames",
+          "type": "integer"
+        },
+        "analysis_frame_size": {
+          "title": "Analysis Frame Size",
+          "type": "integer"
+        },
+        "volume_threshold": {
+          "title": "Volume Threshold",
+          "type": "number"
+        }
+      },
+      "required": [
+        "num_initial_ignored_frames",
+        "silence_duration_frames",
+        "analysis_frame_size",
+        "volume_threshold"
+      ],
+      "title": "CustomSpeechFrameConfig",
+      "type": "object"
+    },
+    "CustomTextToSpeechConfig": {
+      "description": "Custom text-to-speech configuration for app updates",
+      "properties": {
+        "speaker_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker Id"
+        },
+        "internal_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Internal Id"
+        },
+        "language_voice_settings_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/VoiceSettings"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language Voice Settings Mapping"
+        },
+        "language_speaker_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language Speaker Mapping"
+        },
+        "language_gender_settings_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language Gender Settings Mapping"
+        },
+        "language_prompt_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language Prompt Mapping"
+        },
+        "speech_settings": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SpeechSettings"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "speaker_provider": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SpeakerProvider"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "CustomTextToSpeechConfig",
+      "type": "object"
+    },
+    "CustomVADConfig": {
+      "description": "Custom VAD configuration for V2V interactions",
+      "properties": {
+        "primary_vad": {
+          "title": "Primary Vad",
+          "type": "string"
+        },
+        "probability_modulator_config": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probability Modulator Config"
+        },
+        "speech_frame_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CustomSpeechFrameConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "primary_vad"
+      ],
+      "title": "CustomVADConfig",
+      "type": "object"
+    },
+    "DeniedMessageToUserConfig": {
+      "properties": {
+        "max_messages": {
+          "default": 1,
+          "description": "Maximum number of denied messages that can be sent to user",
+          "title": "Max Messages",
+          "type": "integer"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Message to send when user is denied interaction",
+          "title": "Message"
+        }
+      },
+      "title": "DeniedMessageToUserConfig",
+      "type": "object"
+    },
+    "EncryptConfig": {
+      "properties": {
+        "privacy_strategy": {
+          "const": "encrypt",
+          "default": "encrypt",
+          "title": "Privacy Strategy",
+          "type": "string"
+        }
+      },
+      "title": "EncryptConfig",
+      "type": "object"
+    },
+    "EpisodicMemoryConfig": {
+      "properties": {
+        "is_memory_enabled": {
+          "default": false,
+          "description": "Whether memory is enabled",
+          "title": "Is Memory Enabled",
+          "type": "boolean"
+        },
+        "k_recent": {
+          "default": 3,
+          "description": "Number of interactions to fetch",
+          "title": "K Recent",
+          "type": "integer"
+        }
+      },
+      "title": "EpisodicMemoryConfig",
+      "type": "object"
+    },
+    "EvaluationConfig": {
+      "description": "Top-level container persisted under ``app.evaluation_config``.\n\nNote: there is intentionally no upper bound on ``criteria`` length here.\nLimits are a business policy enforced by the authoring service at write\ntime so they can evolve without an SDK release.",
+      "properties": {
+        "criteria": {
+          "items": {
+            "$ref": "#/$defs/Criterion"
+          },
+          "title": "Criteria",
+          "type": "array"
+        }
+      },
+      "title": "EvaluationConfig",
+      "type": "object"
+    },
+    "ExotelUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Exotel's call SID.",
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "ExotelUserInformation",
+      "type": "object"
+    },
+    "GupshupUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Gupshup's call SID.",
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "GupshupUserInformation",
+      "type": "object"
+    },
+    "HashAlgorithm": {
+      "enum": [
+        "sha256",
+        "sha512"
+      ],
+      "title": "HashAlgorithm",
+      "type": "string"
+    },
+    "HashConfig": {
+      "properties": {
+        "privacy_strategy": {
+          "const": "hash",
+          "default": "hash",
+          "title": "Privacy Strategy",
+          "type": "string"
+        },
+        "salt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Salt for hashing",
+          "title": "Salt"
+        },
+        "hash_algorithm": {
+          "$ref": "#/$defs/HashAlgorithm",
+          "description": "Hash algorithm type"
+        }
+      },
+      "required": [
+        "hash_algorithm"
+      ],
+      "title": "HashConfig",
+      "type": "object"
+    },
+    "IndicLanguageStyle": {
+      "enum": [
+        "colloquial",
+        "modern_colloquial",
+        "classic_colloquial",
+        "formal",
+        "formal_with_custom_code_mixed_words",
+        "classic_colloquial_with_custom_code_mixed_words"
+      ],
+      "title": "IndicLanguageStyle",
+      "type": "string"
+    },
+    "IntalkUserInformation": {
+      "description": "Information about the user for InTalk telephony provider",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "InTalk's unique call identifier.",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "IntalkUserInformation",
+      "type": "object"
+    },
+    "InteractionMessageLimitConfig": {
+      "properties": {
+        "max_user_message_per_interaction_cap": {
+          "description": "Maximum number of user messages per interaction",
+          "title": "Max User Message Per Interaction Cap",
+          "type": "integer"
+        },
+        "message_limit_exceeded_message": {
+          "default": "You have reached the maximum number of messages for this interaction. Please try again later.",
+          "description": "Message to send when message limit is exceeded. This is not translated",
+          "title": "Message Limit Exceeded Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "max_user_message_per_interaction_cap"
+      ],
+      "title": "InteractionMessageLimitConfig",
+      "type": "object"
+    },
+    "KBFullName": {
+      "properties": {
+        "org": {
+          "description": "Organization",
+          "title": "Org",
+          "type": "string"
+        },
+        "workspace": {
+          "description": "Workspace",
+          "title": "Workspace",
+          "type": "string"
+        },
+        "kb": {
+          "description": "Knowledge Base",
+          "title": "Kb",
+          "type": "string"
+        }
+      },
+      "required": [
+        "org",
+        "workspace",
+        "kb"
+      ],
+      "title": "KBFullName",
+      "type": "object"
+    },
+    "KaleyraUserInformation": {
+      "description": "Information about the user for Kaleyra telephony provider",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Kaleyra's unique call identifier.",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "KaleyraUserInformation",
+      "type": "object"
+    },
+    "KnowlarityUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Knowlarity's call SID.",
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "KnowlarityUserInformation",
+      "type": "object"
+    },
+    "KnowledgeBaseBinding": {
+      "description": "One knowledge base bound to an agent.\n\n``kb_id``/``top_k``/``token_budget``/``filters``/``rerank`` are authored\n(persisted). ``name``/``description``/``collection_id`` are runtime-only \u2014\nleft ``None`` as authored, and filled in once per app-details fetch from\nthe kb_v1 runtime catalog (see ``get_app_details`` in the runtime\nservice). Never authored/persisted by the client.",
+      "properties": {
+        "kb_id": {
+          "title": "Kb Id",
+          "type": "string"
+        },
+        "top_k": {
+          "default": 5,
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Top K",
+          "type": "integer"
+        },
+        "token_budget": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Token Budget"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Filters"
+        },
+        "rerank": {
+          "default": false,
+          "title": "Rerank",
+          "type": "boolean"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "collection_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Collection Id"
+        }
+      },
+      "required": [
+        "kb_id"
+      ],
+      "title": "KnowledgeBaseBinding",
+      "type": "object"
+    },
+    "KnowledgeBaseConfig": {
+      "properties": {
+        "kb_full_name": {
+          "$ref": "#/$defs/KBFullName",
+          "description": "Name of the knowledge base"
+        },
+        "description": {
+          "default": "",
+          "description": "Description of the knowledge base",
+          "title": "Description",
+          "type": "string"
+        },
+        "version": {
+          "default": "latest",
+          "description": "Version of the knowledge base",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kb_full_name"
+      ],
+      "title": "KnowledgeBaseConfig",
+      "type": "object"
+    },
+    "KnowledgeBaseQueryConfig": {
+      "properties": {
+        "knowledge_base_bindings": {
+          "items": {
+            "$ref": "#/$defs/KnowledgeBaseBinding"
+          },
+          "title": "Knowledge Base Bindings",
+          "type": "array"
+        },
+        "tool_description": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional override for the query_knowledge_base tool description shown to the LLM. When null, runtime uses the platform default from the QueryKnowledgeBase tool.",
+          "title": "Tool Description"
+        }
+      },
+      "title": "KnowledgeBaseQueryConfig",
+      "type": "object"
+    },
+    "LanguageIdentification": {
+      "properties": {
+        "lid_mode": {
+          "$ref": "#/$defs/LanguageIdentificationMode",
+          "default": "once",
+          "description": "When to identify user language"
+        },
+        "language_switch_conversation_connector": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nudge the user back to topic after language switch",
+          "title": "Language Switch Conversation Connector"
+        }
+      },
+      "title": "LanguageIdentification",
+      "type": "object"
+    },
+    "LanguageIdentificationMode": {
+      "enum": [
+        "always",
+        "once",
+        "first_turn"
+      ],
+      "title": "LanguageIdentificationMode",
+      "type": "string"
+    },
+    "LanguageName": {
+      "enum": [
+        "Bengali",
+        "Gujarati",
+        "Kannada",
+        "Konkani",
+        "Malayalam",
+        "Tamil",
+        "Telugu",
+        "Punjabi",
+        "Sanskrit",
+        "Odia",
+        "Marathi",
+        "Hindi",
+        "English",
+        "Assamese"
+      ],
+      "title": "LanguageName",
+      "type": "string"
+    },
+    "LanguageProcessingMode": {
+      "enum": [
+        "transliterate",
+        "bypass_post_deterministic_pretts"
+      ],
+      "title": "LanguageProcessingMode",
+      "type": "string"
+    },
+    "LogicOperator": {
+      "enum": [
+        "AND",
+        "OR"
+      ],
+      "title": "LogicOperator",
+      "type": "string"
+    },
+    "MaskConfig": {
+      "properties": {
+        "privacy_strategy": {
+          "const": "mask",
+          "default": "mask",
+          "title": "Privacy Strategy",
+          "type": "string"
+        },
+        "pattern": {
+          "description": "Regular expression for masking",
+          "title": "Pattern",
+          "type": "string"
+        },
+        "replacement": {
+          "description": "Replacement string for masking",
+          "title": "Replacement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pattern",
+        "replacement"
+      ],
+      "title": "MaskConfig",
+      "type": "object"
+    },
+    "MemoryConfig": {
+      "properties": {
+        "episodic_memory_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EpisodicMemoryConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Config for episodic memory"
+        }
+      },
+      "title": "MemoryConfig",
+      "type": "object"
+    },
+    "MishtelUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Mishtel's call SID.",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "MishtelUserInformation",
+      "type": "object"
+    },
+    "MixedSpeakerConfig": {
+      "properties": {
+        "language_name": {
+          "title": "Language Name",
+          "type": "string"
+        },
+        "speaker_name": {
+          "title": "Speaker Name",
+          "type": "string"
+        },
+        "bypass_translate_transliterate": {
+          "title": "Bypass Translate Transliterate",
+          "type": "boolean"
+        },
+        "preprocessing_mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LanguageProcessingMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "language_name",
+        "speaker_name",
+        "bypass_translate_transliterate"
+      ],
+      "title": "MixedSpeakerConfig",
+      "type": "object"
+    },
+    "MixedSpeakerConfigV2": {
+      "description": "One entry in a v2 mixed-speaker config.\n\n``internal_id`` is the ONLY voice reference under the DB-sourced model \u2014\nit points at a row in authoring's ``voices`` table, not a ``SpeakerName``.",
+      "properties": {
+        "language_name": {
+          "$ref": "#/$defs/LanguageName"
+        },
+        "internal_id": {
+          "format": "uuid",
+          "title": "Internal Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "language_name",
+        "internal_id"
+      ],
+      "title": "MixedSpeakerConfigV2",
+      "type": "object"
+    },
+    "MultilingualText": {
+      "properties": {
+        "language_text_mapping": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/LanguageName"
+          },
+          "title": "Language Text Mapping",
+          "type": "object"
+        },
+        "default_language": {
+          "$ref": "#/$defs/LanguageName",
+          "default": "English"
+        }
+      },
+      "required": [
+        "language_text_mapping"
+      ],
+      "title": "MultilingualText",
+      "type": "object"
+    },
+    "NextState": {
+      "properties": {
+        "name": {
+          "description": "Name of the next state",
+          "title": "Name",
+          "type": "string"
+        },
+        "condition": {
+          "description": "Condition to transition to the next state",
+          "title": "Condition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "condition"
+      ],
+      "title": "NextState",
+      "type": "object"
+    },
+    "NudgeChoice": {
+      "enum": [
+        "random"
+      ],
+      "title": "NudgeChoice",
+      "type": "string"
+    },
+    "OnEndAPIConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "api_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/APIConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "API configuration"
+        },
+        "on_end_type": {
+          "const": "api",
+          "default": "api",
+          "title": "On End Type",
+          "type": "string"
+        }
+      },
+      "title": "OnEndAPIConfig",
+      "type": "object"
+    },
+    "OnStartAPIConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "api_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/APIConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "API configuration"
+        },
+        "on_start_type": {
+          "const": "api",
+          "default": "api",
+          "title": "On Start Type",
+          "type": "string"
+        },
+        "response_template": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OnStartOutput"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Agent and internal variables can be templated"
+        }
+      },
+      "title": "OnStartAPIConfig",
+      "type": "object"
+    },
+    "OnStartOutput": {
+      "properties": {
+        "agent_variables": {
+          "additionalProperties": true,
+          "default": {},
+          "description": "Variables exposed to the LLM",
+          "title": "Agent Variables",
+          "type": "object"
+        },
+        "internal_variables": {
+          "additionalProperties": true,
+          "default": {},
+          "description": "Variables used internally by the app",
+          "title": "Internal Variables",
+          "type": "object"
+        },
+        "user_information": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SipUserInformation"
+            },
+            {
+              "$ref": "#/$defs/SmartfloUserInformation"
+            },
+            {
+              "$ref": "#/$defs/WAUserInformation"
+            },
+            {
+              "$ref": "#/$defs/ExotelUserInformation"
+            },
+            {
+              "$ref": "#/$defs/WebCallUserInformation"
+            },
+            {
+              "$ref": "#/$defs/KnowlarityUserInformation"
+            },
+            {
+              "$ref": "#/$defs/GupshupUserInformation"
+            },
+            {
+              "$ref": "#/$defs/TataTeleUserInformation"
+            },
+            {
+              "$ref": "#/$defs/RealtimeUserInformation"
+            },
+            {
+              "$ref": "#/$defs/MishtelUserInformation"
+            },
+            {
+              "$ref": "#/$defs/TwilioUserInformation"
+            },
+            {
+              "$ref": "#/$defs/PulseUserInformation"
+            },
+            {
+              "$ref": "#/$defs/IntalkUserInformation"
+            },
+            {
+              "$ref": "#/$defs/VobizUserInformation"
+            },
+            {
+              "$ref": "#/$defs/PlivoUserInformation"
+            },
+            {
+              "$ref": "#/$defs/KaleyraUserInformation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Information about the user",
+          "title": "User Information"
+        },
+        "authoring_config": {
+          "additionalProperties": true,
+          "default": {},
+          "description": "Configuration of the app",
+          "title": "Authoring Config",
+          "type": "object"
+        },
+        "custom_app_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CustomAppConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Configurations that can be updated for an app"
+        }
+      },
+      "title": "OnStartOutput",
+      "type": "object"
+    },
+    "Operator": {
+      "enum": [
+        "equals",
+        "not_equals",
+        "in",
+        "not_in",
+        "gt",
+        "lt",
+        "gte",
+        "lte"
+      ],
+      "title": "Operator",
+      "type": "string"
+    },
+    "OutputTypes": {
+      "enum": [
+        "text",
+        "audio",
+        "text_and_audio"
+      ],
+      "title": "OutputTypes",
+      "type": "string"
+    },
+    "PlivoUserInformation": {
+      "description": "Information about the user for Plivo telephony provider",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Plivo's unique call identifier (CallUUID).",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "PlivoUserInformation",
+      "type": "object"
+    },
+    "PreRecordedAudioMessage": {
+      "properties": {
+        "audio_file_id": {
+          "title": "Audio File Id",
+          "type": "string"
+        },
+        "transcript": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transcript"
+        }
+      },
+      "required": [
+        "audio_file_id"
+      ],
+      "title": "PreRecordedAudioMessage",
+      "type": "object"
+    },
+    "PrivacyConfig": {
+      "properties": {
+        "header": {
+          "$ref": "#/$defs/PrivacyConfigHeader",
+          "description": "Header information"
+        },
+        "agent_variable_config": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/PrivacyTransformationConfig"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Dictionary of Privacy transformation configurations",
+          "title": "Agent Variable Config"
+        },
+        "user_information_config": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/UserInformationConfig"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/UserIdentifierType"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Privacy transformation configurations for user information",
+          "title": "User Information Config"
+        }
+      },
+      "title": "PrivacyConfig",
+      "type": "object"
+    },
+    "PrivacyConfigHeader": {
+      "properties": {
+        "version": {
+          "default": "1.0",
+          "description": "Version of the Privacy config",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "title": "PrivacyConfigHeader",
+      "type": "object"
+    },
+    "PrivacyTransformationConfig": {
+      "properties": {
+        "steps": {
+          "description": "List of privacy transformation steps to be applied in sequence",
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "encrypt": "#/$defs/EncryptConfig",
+                "hash": "#/$defs/HashConfig",
+                "mask": "#/$defs/MaskConfig"
+              },
+              "propertyName": "privacy_strategy"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/MaskConfig"
+              },
+              {
+                "$ref": "#/$defs/HashConfig"
+              },
+              {
+                "$ref": "#/$defs/EncryptConfig"
+              }
+            ]
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "steps"
+      ],
+      "title": "PrivacyTransformationConfig",
+      "type": "object"
+    },
+    "ProbabilityModulatorConfig": {
+      "properties": {
+        "short_utterance_sensitivity_duration": {
+          "default": 2,
+          "description": "Duration post the bit finishes speaking, during which the probabilities will be boosted",
+          "title": "Short Utterance Sensitivity Duration",
+          "type": "number"
+        },
+        "bot_resist_interrupt_duration": {
+          "default": 2,
+          "description": "Duration post the bot starts speaking, during which the probabilities will be dampened",
+          "title": "Bot Resist Interrupt Duration",
+          "type": "number"
+        },
+        "bot_start_speaking_multiplier": {
+          "default": 0.5,
+          "description": "Multiplier for when the bot starts speaking, active during 'bot_resist_interrupt_duration'",
+          "title": "Bot Start Speaking Multiplier",
+          "type": "number"
+        },
+        "bot_speaking_normal_multiplier": {
+          "default": 0.8,
+          "description": "Multiplier for the duration when the bot is speaking",
+          "title": "Bot Speaking Normal Multiplier",
+          "type": "number"
+        },
+        "bot_end_speaking_multiplier": {
+          "default": 1.5,
+          "description": "Multiplying factor for when the bot just finishes speaking, active during 'short_utterance_sensitivity_duration'",
+          "title": "Bot End Speaking Multiplier",
+          "type": "number"
+        },
+        "user_speaking_normal_multiplier": {
+          "default": 1,
+          "description": "Multiplying factor for the rest of the conversation.",
+          "title": "User Speaking Normal Multiplier",
+          "type": "number"
+        }
+      },
+      "title": "ProbabilityModulatorConfig",
+      "type": "object"
+    },
+    "PulseUserInformation": {
+      "description": "Information about the user for Pulse telephony provider",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Pulse's unique call identifier.",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "PulseUserInformation",
+      "type": "object"
+    },
+    "RealtimeUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "unknown",
+          "description": "Type of user identifier",
+          "examples": [
+            "phone_number",
+            "email",
+            "custom",
+            "unknown"
+          ]
+        },
+        "call_sid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Provider call SID, if available (telephony channels).",
+          "title": "Call Sid"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Email of the user.",
+          "title": "Email"
+        },
+        "phone_number": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Phone number of the user.",
+          "title": "Phone Number"
+        },
+        "provider_ref_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Provider reference ID of the user.",
+          "title": "Provider Ref Id"
+        }
+      },
+      "required": [
+        "identifier"
+      ],
+      "title": "RealtimeUserInformation",
+      "type": "object"
+    },
+    "RuleBasedConfig": {
+      "description": "Boolean group joining one or more ``Condition`` rows.",
+      "properties": {
+        "logic": {
+          "$ref": "#/$defs/LogicOperator"
+        },
+        "conditions": {
+          "items": {
+            "$ref": "#/$defs/Condition"
+          },
+          "minItems": 1,
+          "title": "Conditions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "logic",
+        "conditions"
+      ],
+      "title": "RuleBasedConfig",
+      "type": "object"
+    },
+    "ScriptName": {
+      "enum": [
+        "romanised",
+        "indic",
+        "code_mixed"
+      ],
+      "title": "ScriptName",
+      "type": "string"
+    },
+    "SipUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "SIP call SID.",
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "SipUserInformation",
+      "type": "object"
+    },
+    "SmartTranslateConfig": {
+      "properties": {
+        "smart_translate_model_name": {
+          "default": "Sarvam Pro",
+          "description": "model name",
+          "title": "Smart Translate Model Name",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.1,
+          "description": "temperature",
+          "title": "Temperature",
+          "type": "number"
+        },
+        "system_prompt": {
+          "default": "",
+          "description": "system prompt",
+          "title": "System Prompt",
+          "type": "string"
+        },
+        "system_prompt_template": {
+          "default": "",
+          "description": "system prompt template",
+          "title": "System Prompt Template",
+          "type": "string"
+        },
+        "auto_switch_output_language": {
+          "default": false,
+          "description": "auto switch output language",
+          "title": "Auto Switch Output Language",
+          "type": "boolean"
+        },
+        "auto_switch_output_script": {
+          "default": false,
+          "description": "auto switch output script",
+          "title": "Auto Switch Output Script",
+          "type": "boolean"
+        },
+        "output_language": {
+          "$ref": "#/$defs/LanguageName",
+          "default": "English",
+          "description": "output language"
+        },
+        "turn_count_threshold": {
+          "default": 3,
+          "description": "turn count threshold",
+          "title": "Turn Count Threshold",
+          "type": "integer"
+        },
+        "retry_count": {
+          "default": 1,
+          "description": "retry count",
+          "title": "Retry Count",
+          "type": "integer"
+        }
+      },
+      "title": "SmartTranslateConfig",
+      "type": "object"
+    },
+    "SmartfloUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Smartflo's call SID.",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "SmartfloUserInformation",
+      "type": "object"
+    },
+    "SpeakerProvider": {
+      "enum": [
+        "sarvam",
+        "elevenlabs",
+        "cartesia",
+        "azure"
+      ],
+      "title": "SpeakerProvider",
+      "type": "string"
+    },
+    "SpeechFrameConfig": {
+      "properties": {
+        "num_initial_ignored_frames": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": 150,
+          "description": "Number of frames to ignore at the start of the audio",
+          "title": "Num Initial Ignored Frames"
+        },
+        "silence_duration_frames": {
+          "default": 6,
+          "description": "Silent audio frames before concluding that the speaker has stopped talkingNone defaults to 6",
+          "title": "Silence Duration Frames",
+          "type": "integer"
+        },
+        "analysis_frame_size": {
+          "default": 8,
+          "description": "Frame size to consider for End of Speech Analysis",
+          "title": "Analysis Frame Size",
+          "type": "integer"
+        },
+        "volume_threshold": {
+          "default": -35,
+          "description": "Volume threshold for speech detection in dBFS",
+          "title": "Volume Threshold",
+          "type": "number"
+        }
+      },
+      "title": "SpeechFrameConfig",
+      "type": "object"
+    },
+    "SpeechSettings": {
+      "properties": {
+        "pitch": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pitch of the speech",
+          "title": "Pitch"
+        },
+        "pace": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Speed of the speech",
+          "title": "Pace"
+        },
+        "volume": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Volume of the speech",
+          "title": "Volume"
+        }
+      },
+      "title": "SpeechSettings",
+      "type": "object"
+    },
+    "StateConfig": {
+      "properties": {
+        "name": {
+          "description": "Name of the state",
+          "title": "Name",
+          "type": "string"
+        },
+        "goal": {
+          "default": "",
+          "description": "Goal of the state",
+          "title": "Goal",
+          "type": "string"
+        },
+        "instructions": {
+          "description": "Step-by-step instructions on what to do in the state to achieve the goal. Specify what tools to use, what state to go next.",
+          "title": "Instructions",
+          "type": "string"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Background context that is useful for this particular state",
+          "title": "Context"
+        },
+        "tool_names": {
+          "default": [],
+          "description": "Tools that can be used in the state with key as tool name.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Tool Names",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "next_states": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/NextState"
+              },
+              "type": "array"
+            }
+          ],
+          "default": [],
+          "description": "States that can be transitioned to. Can be set of strings or list of NextState objects.",
+          "title": "Next States"
+        },
+        "agent_variables_in_context": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "uniqueItems": true
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Variables that are visible to the agent in this state. By default, all agent variables are visible.",
+          "title": "Agent Variables In Context"
+        }
+      },
+      "required": [
+        "name",
+        "instructions"
+      ],
+      "title": "StateConfig",
+      "type": "object"
+    },
+    "TataTeleUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "tata tele's call SID.",
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "TataTeleUserInformation",
+      "type": "object"
+    },
+    "TemplateNudgeMessageConfig": {
+      "properties": {
+        "timeout_seconds": {
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "nudge_type": {
+          "const": "template",
+          "default": "template",
+          "title": "Nudge Type",
+          "type": "string"
+        },
+        "template_messages": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Template Messages"
+        },
+        "multilingual_template_messages": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/MultilingualText"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Multilingual Template Messages"
+        },
+        "multilingual_template_messages_female": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/MultilingualText"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Female-gendered multilingual template messages, generated by translation pipeline",
+          "title": "Multilingual Template Messages Female"
+        },
+        "choice": {
+          "$ref": "#/$defs/NudgeChoice",
+          "default": "random"
+        }
+      },
+      "required": [
+        "timeout_seconds"
+      ],
+      "title": "TemplateNudgeMessageConfig",
+      "type": "object"
+    },
+    "TextToSpeechConfigV2": {
+      "additionalProperties": false,
+      "description": "Thin, DB-referencing TTS config \u2014 the ``\"2.0\"`` variant stored in the\nSAME ``app.text_to_speech_config`` column as the legacy fat config,\ndiscriminated by ``config_version``.\n\nDeliberately does NOT inherit ``BaseConfig``: that sets\n``use_enum_values=True`` (unwanted here) and does not set\n``extra=\"forbid\"``. Plain ``BaseModel`` keeps the surface tight.\n\nSerialization consequence: without ``use_enum_values=True``,\n``model_dump()`` returns ``UUID`` objects and enum members, which\n``json.dumps`` cannot write into authoring's ``sa.JSON`` column. Anything\nthat persists this must use ``model_dump(mode=\"json\")`` or\n``model_dump_json()``. Reading back is fine \u2014 pydantic parses the strings.",
+      "properties": {
+        "config_version": {
+          "const": "2.0",
+          "default": "2.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "internal_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Internal Id"
+        },
+        "enable_mixed_speaker_settings": {
+          "default": false,
+          "title": "Enable Mixed Speaker Settings",
+          "type": "boolean"
+        },
+        "mixed_speaker_config": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/MixedSpeakerConfigV2"
+          },
+          "title": "Mixed Speaker Config",
+          "type": "array"
+        },
+        "initial_language_speaker_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/LanguageName"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Initial Language Speaker Mapping"
+        },
+        "speech_settings": {
+          "$ref": "#/$defs/SpeechSettings",
+          "default": {
+            "pitch": null,
+            "pace": null,
+            "volume": null
+          }
+        },
+        "language_prompt_mapping": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Language Prompt Mapping",
+          "type": "object"
+        },
+        "silence_duration": {
+          "default": 300,
+          "title": "Silence Duration",
+          "type": "number"
+        }
+      },
+      "title": "TextToSpeechConfigV2",
+      "type": "object"
+    },
+    "ToolNudgeMessageConfig": {
+      "description": "Calls a tool with optional args",
+      "properties": {
+        "timeout_seconds": {
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "nudge_type": {
+          "const": "tool",
+          "default": "tool",
+          "title": "Nudge Type",
+          "type": "string"
+        },
+        "tool_name": {
+          "description": "Name of the tool. Should be one among the available tools.",
+          "title": "Tool Name",
+          "type": "string"
+        },
+        "tool_args": {
+          "additionalProperties": true,
+          "description": "Arguments to be passed to the tool. Should strictly adhere to the tool schema.",
+          "title": "Tool Args",
+          "type": "object"
+        }
+      },
+      "required": [
+        "timeout_seconds",
+        "tool_name",
+        "tool_args"
+      ],
+      "title": "ToolNudgeMessageConfig",
+      "type": "object"
+    },
+    "ToolRunnerParameters": {
+      "properties": {
+        "parameters": {
+          "additionalProperties": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "default": {},
+          "title": "Parameters",
+          "type": "object"
+        }
+      },
+      "title": "ToolRunnerParameters",
+      "type": "object"
+    },
+    "TwilioUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Twilio's call SID.",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "TwilioUserInformation",
+      "type": "object"
+    },
+    "UserIdentifierType": {
+      "enum": [
+        "phone_number",
+        "email",
+        "custom",
+        "unknown"
+      ],
+      "title": "UserIdentifierType",
+      "type": "string"
+    },
+    "UserInformationConfig": {
+      "properties": {
+        "mask_config": {
+          "$ref": "#/$defs/MaskConfig"
+        },
+        "hash_config": {
+          "$ref": "#/$defs/HashConfig"
+        },
+        "encrypt_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EncryptConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "mask_config",
+        "hash_config"
+      ],
+      "title": "UserInformationConfig",
+      "type": "object"
+    },
+    "V2VApp": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "on_start_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OnStartAPIConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "on_end_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OnEndAPIConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tool_runner_parameters": {
+          "$ref": "#/$defs/ToolRunnerParameters",
+          "default": {
+            "parameters": {}
+          }
+        },
+        "privacy_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PrivacyConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "memory_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MemoryConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evaluation_config": {
+          "$ref": "#/$defs/EvaluationConfig"
+        },
+        "channel_type": {
+          "const": "v2v",
+          "default": "v2v",
+          "title": "Channel Type",
+          "type": "string"
+        },
+        "llm_config": {
+          "$ref": "#/$defs/V2VLLMConfig"
+        },
+        "intro_message_config": {
+          "$ref": "#/$defs/V2VIntroMessageConfig",
+          "default": {
+            "config_version": "1.0",
+            "audio": null,
+            "multilingual_audio": null,
+            "multilingual_audio_male": null,
+            "multilingual_audio_female": null,
+            "pre_recorded_audio_message": null
+          }
+        },
+        "language_config": {
+          "$ref": "#/$defs/V2VLanguageConfig"
+        },
+        "speech_to_text_config": {
+          "$ref": "#/$defs/V2VSpeechToTextConfig",
+          "default": {
+            "config_version": "1.0",
+            "asr_model_name": null,
+            "speech_hotwords": null,
+            "system_prompt": null,
+            "min_audio_duration_for_language_lid": null
+          }
+        },
+        "text_to_speech_config": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "1.0": "#/$defs/V2VTextToSpeechConfig",
+                  "2.0": "#/$defs/TextToSpeechConfigV2"
+                },
+                "propertyName": "config_version"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/TextToSpeechConfigV2"
+                },
+                {
+                  "$ref": "#/$defs/V2VTextToSpeechConfig"
+                }
+              ]
+            },
+            {
+              "$ref": "#/$defs/V2VTextToSpeechConfig"
+            }
+          ],
+          "default": {
+            "config_version": "1.0",
+            "speaker_id": null,
+            "internal_id": null,
+            "language_speaker_mapping": {},
+            "language_voice_settings_mapping": {
+              "bn-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "bn-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "bn-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "en-US": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "en-f-limmits_xlit_en",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "gu-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.05,
+                "pitch": 0.6,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "gu-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "bn-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "hi-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "hi-f-int",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "kn-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.05,
+                "pitch": 0.2,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "kn-f-ai4b",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "kn-f-limmits",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "ml-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "ml-f-ai4b",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "ml-f-ai4b",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "mr-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "mr-f-limmits",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "od-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "od-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "pa-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.2,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "pa-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "pa-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "ta-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 0.9,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "ta-f-ai4b",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "kn-f-ai4b",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "te-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "te-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "te-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              }
+            },
+            "language_gender_settings_mapping": {
+              "as-IN": "Female",
+              "bn-IN": "Female",
+              "en-US": "Female",
+              "gu-IN": "Female",
+              "hi-IN": "Female",
+              "kn-IN": "Female",
+              "ml-IN": "Female",
+              "mr-IN": "Female",
+              "od-IN": "Female",
+              "pa-IN": "Female",
+              "ta-IN": "Female",
+              "te-IN": "Female"
+            },
+            "language_prompt_mapping": {
+              "en-US": "Hello, today we will be talking in English.",
+              "hi-IN": "\u0928\u092e\u0938\u094d\u0924\u0947, \u0906\u091c \u0939\u092e Hindi \u0914\u0930 English \u0926\u094b\u0928\u094b\u0902 \u092e\u0947\u0902 \u092c\u093e\u0924 \u0915\u0930\u0947\u0902\u0917\u0947, \u0920\u0940\u0915 \u0939\u0948?",
+              "ta-IN": "\u0bb5\u0ba3\u0b95\u0bcd\u0b95\u0bae\u0bcd, \u0b87\u0ba9\u0bcd\u0bb1\u0bc1 \u0ba8\u0bbe\u0bae\u0bcd \u0ba4\u0bae\u0bbf\u0bb4\u0bbf\u0bb2\u0bcd \u0baa\u0bc7\u0b9a\u0bc1\u0bb5\u0bcb\u0bae\u0bcd."
+            },
+            "speaker_provider": "sarvam",
+            "speech_settings": {
+              "pace": null,
+              "pitch": null,
+              "volume": null
+            },
+            "enable_mixed_speaker_settings": false,
+            "mixed_speaker_config": [],
+            "silence_duration": 300.0,
+            "initial_language_speaker_mapping": null
+          },
+          "title": "Text To Speech Config"
+        },
+        "interaction_config": {
+          "$ref": "#/$defs/V2VInteractionConfig",
+          "default": {
+            "allow_interrupt_during_playback": true,
+            "vad_config": null,
+            "nudge_config": null,
+            "config_version": "1.0",
+            "max_interaction_time_seconds": null,
+            "skip_translate_transliterate": false,
+            "enable_indic_native_mode": false,
+            "use_native_function_calling": false,
+            "send_whatsapp_message_on_end": false,
+            "whatsapp_on_end_mode": null,
+            "enable_synchronization": null,
+            "call_transfer_config": null
+          }
+        },
+        "guardrail_config": {
+          "$ref": "#/$defs/V2VGuardrailConfig",
+          "default": {
+            "config_version": "1.0"
+          }
+        },
+        "output_config": {
+          "$ref": "#/$defs/V2VOutputConfig",
+          "default": {
+            "config_version": "1.0",
+            "output_type": "audio",
+            "background_sound": null
+          }
+        }
+      },
+      "required": [
+        "llm_config",
+        "language_config"
+      ],
+      "title": "V2VApp",
+      "type": "object"
+    },
+    "V2VGuardrailConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        }
+      },
+      "title": "V2VGuardrailConfig",
+      "type": "object"
+    },
+    "V2VInteractionConfig": {
+      "properties": {
+        "allow_interrupt_during_playback": {
+          "default": true,
+          "description": "If enabled, user can interrupt the bot when it is speaking.",
+          "title": "Allow Interrupt During Playback",
+          "type": "boolean"
+        },
+        "vad_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VADConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VAD configuration"
+        },
+        "nudge_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/V2VNudgeConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nudge configuration"
+        },
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "max_interaction_time_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Maximum time allowed for interaction in seconds",
+          "title": "Max Interaction Time Seconds"
+        },
+        "skip_translate_transliterate": {
+          "default": false,
+          "description": "Skip translate transliteration",
+          "title": "Skip Translate Transliterate",
+          "type": "boolean"
+        },
+        "enable_indic_native_mode": {
+          "default": false,
+          "description": "Enable native Indic language input and output processing",
+          "title": "Enable Indic Native Mode",
+          "type": "boolean"
+        },
+        "use_native_function_calling": {
+          "default": false,
+          "description": "Use native function calling in chat LLM",
+          "title": "Use Native Function Calling",
+          "type": "boolean"
+        },
+        "send_whatsapp_message_on_end": {
+          "default": false,
+          "description": "Send a message on end",
+          "title": "Send Whatsapp Message On End",
+          "type": "boolean"
+        },
+        "whatsapp_on_end_mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WhatsAppOnEndMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Mode to send message on end"
+        },
+        "enable_synchronization": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Enable synchronization",
+          "title": "Enable Synchronization"
+        },
+        "call_transfer_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CallTransferConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Call transfer configuration"
+        }
+      },
+      "title": "V2VInteractionConfig",
+      "type": "object"
+    },
+    "V2VIntroMessageConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "audio": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial message text that the bot will convert to audio and send",
+          "title": "Audio"
+        },
+        "multilingual_audio": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MultilingualText"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial message audio"
+        },
+        "multilingual_audio_male": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MultilingualText"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Male-gendered initial message audio per language, generated by translation pipeline"
+        },
+        "multilingual_audio_female": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MultilingualText"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Female-gendered initial message audio per language, generated by translation pipeline"
+        },
+        "pre_recorded_audio_message": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PreRecordedAudioMessage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pre-recorded audio message that the bot will send to user. If available, takes priority over intro_message"
+        }
+      },
+      "title": "V2VIntroMessageConfig",
+      "type": "object"
+    },
+    "V2VLLMConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "llm_model_variant": {
+          "title": "Llm Model Variant",
+          "type": "string"
+        },
+        "tool_llm_model_variant": {
+          "default": "yotta/llama-3.1-70b",
+          "title": "Tool Llm Model Variant",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.1,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "agent_config": {
+          "$ref": "#/$defs/BaseAgentConfig",
+          "description": "Agent config"
+        },
+        "fallback_messages": {
+          "default": [
+            "Sorry, I could not understand. Can you please repeat?"
+          ],
+          "description": "Fallback messages to use when model fails to generate a response",
+          "items": {
+            "type": "string"
+          },
+          "title": "Fallback Messages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "llm_model_variant",
+        "agent_config"
+      ],
+      "title": "V2VLLMConfig",
+      "type": "object"
+    },
+    "V2VLanguageConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "initial_language_name": {
+          "$ref": "#/$defs/LanguageName",
+          "description": "Initial language for bot"
+        },
+        "supported_languages": {
+          "description": "Languages supported",
+          "items": {
+            "$ref": "#/$defs/LanguageName"
+          },
+          "title": "Supported Languages",
+          "type": "array"
+        },
+        "lid_supported_languages": {
+          "default": [],
+          "description": "Languages supported for LID",
+          "items": {
+            "$ref": "#/$defs/LanguageName"
+          },
+          "title": "Lid Supported Languages",
+          "type": "array"
+        },
+        "enable_language_identification": {
+          "default": false,
+          "description": "Enable user language identification",
+          "title": "Enable Language Identification",
+          "type": "boolean"
+        },
+        "indic_language_style": {
+          "$ref": "#/$defs/IndicLanguageStyle",
+          "default": "classic_colloquial",
+          "description": "Indic language style"
+        },
+        "numbers_in_indic": {
+          "default": false,
+          "description": "Whether to use numbers in Indic language",
+          "title": "Numbers In Indic",
+          "type": "boolean"
+        },
+        "custom_code_mixed_words": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Custom code mixed words for each language",
+          "title": "Custom Code Mixed Words"
+        },
+        "language_identification": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LanguageIdentification"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Language identification configuration"
+        }
+      },
+      "required": [
+        "initial_language_name",
+        "supported_languages"
+      ],
+      "title": "V2VLanguageConfig",
+      "type": "object"
+    },
+    "V2VNudgeConfig": {
+      "properties": {
+        "enable_inactivity_nudge": {
+          "default": false,
+          "description": "Enable inactivity nudge",
+          "title": "Enable Inactivity Nudge",
+          "type": "boolean"
+        },
+        "user_nudge_message_configs": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "assistant_dynamic": "#/$defs/AssistantDynamicNudgeMessageConfig",
+                "assistant_static": "#/$defs/AssistantStaticNudgeMessageConfig",
+                "template": "#/$defs/TemplateNudgeMessageConfig"
+              },
+              "propertyName": "nudge_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/TemplateNudgeMessageConfig"
+              },
+              {
+                "$ref": "#/$defs/AssistantStaticNudgeMessageConfig"
+              },
+              {
+                "$ref": "#/$defs/AssistantDynamicNudgeMessageConfig"
+              }
+            ]
+          },
+          "title": "User Nudge Message Configs",
+          "type": "array"
+        },
+        "bot_nudge_message_configs": {
+          "anyOf": [
+            {
+              "items": {
+                "discriminator": {
+                  "mapping": {
+                    "assistant_dynamic": "#/$defs/AssistantDynamicNudgeMessageConfig",
+                    "assistant_static": "#/$defs/AssistantStaticNudgeMessageConfig",
+                    "template": "#/$defs/TemplateNudgeMessageConfig"
+                  },
+                  "propertyName": "nudge_type"
+                },
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/TemplateNudgeMessageConfig"
+                  },
+                  {
+                    "$ref": "#/$defs/AssistantStaticNudgeMessageConfig"
+                  },
+                  {
+                    "$ref": "#/$defs/AssistantDynamicNudgeMessageConfig"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bot Nudge Message Configs"
+        },
+        "end_interaction_after_consecutive_nudges": {
+          "default": true,
+          "title": "End Interaction After Consecutive Nudges",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "user_nudge_message_configs"
+      ],
+      "title": "V2VNudgeConfig",
+      "type": "object"
+    },
+    "V2VOutputConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "output_type": {
+          "const": "audio",
+          "default": "audio",
+          "title": "Output Type",
+          "type": "string"
+        },
+        "background_sound": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BackgroundSound"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "V2VOutputConfig",
+      "type": "object"
+    },
+    "V2VSpeechToTextConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "asr_model_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the ASR model to use",
+          "title": "Asr Model Name"
+        },
+        "speech_hotwords": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "List of hotwords",
+          "title": "Speech Hotwords"
+        },
+        "system_prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "System prompt to use",
+          "title": "System Prompt"
+        },
+        "min_audio_duration_for_language_lid": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Minimum audio duration for language LID",
+          "title": "Min Audio Duration For Language Lid"
+        }
+      },
+      "title": "V2VSpeechToTextConfig",
+      "type": "object"
+    },
+    "V2VTextToSpeechConfig": {
+      "properties": {
+        "config_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "speaker_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Speaker ID",
+          "title": "Speaker Id"
+        },
+        "internal_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ai_voices.internal_id this config was hydrated from",
+          "title": "Internal Id"
+        },
+        "language_speaker_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": {},
+          "description": "Language to speaker mapping",
+          "title": "Language Speaker Mapping"
+        },
+        "language_voice_settings_mapping": {
+          "additionalProperties": {
+            "$ref": "#/$defs/VoiceSettings"
+          },
+          "default": {
+            "hi-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "hi-f-int",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "bn-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "bn-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "bn-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "gu-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.05,
+              "pitch": 0.6,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "gu-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "bn-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "kn-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.05,
+              "pitch": 0.2,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "kn-f-ai4b",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "kn-f-limmits",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "ml-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "ml-f-ai4b",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "ml-f-ai4b",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "mr-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "mr-f-limmits",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "od-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "od-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "pa-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.2,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "pa-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "pa-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "ta-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 0.9,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "ta-f-ai4b",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "kn-f-ai4b",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "te-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "te-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "te-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "en-US": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "en-f-limmits_xlit_en",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            }
+          },
+          "description": "Language to voice settings mapping",
+          "title": "Language Voice Settings Mapping",
+          "type": "object"
+        },
+        "language_gender_settings_mapping": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {
+            "hi-IN": "Female",
+            "bn-IN": "Female",
+            "kn-IN": "Female",
+            "ml-IN": "Female",
+            "mr-IN": "Female",
+            "od-IN": "Female",
+            "pa-IN": "Female",
+            "ta-IN": "Female",
+            "te-IN": "Female",
+            "gu-IN": "Female",
+            "en-US": "Female",
+            "as-IN": "Female"
+          },
+          "description": "Language to gender settings mapping",
+          "title": "Language Gender Settings Mapping",
+          "type": "object"
+        },
+        "language_prompt_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": {
+            "en-US": "Hello, today we will be talking in English.",
+            "hi-IN": "\u0928\u092e\u0938\u094d\u0924\u0947, \u0906\u091c \u0939\u092e Hindi \u0914\u0930 English \u0926\u094b\u0928\u094b\u0902 \u092e\u0947\u0902 \u092c\u093e\u0924 \u0915\u0930\u0947\u0902\u0917\u0947, \u0920\u0940\u0915 \u0939\u0948?",
+            "ta-IN": "\u0bb5\u0ba3\u0b95\u0bcd\u0b95\u0bae\u0bcd, \u0b87\u0ba9\u0bcd\u0bb1\u0bc1 \u0ba8\u0bbe\u0bae\u0bcd \u0ba4\u0bae\u0bbf\u0bb4\u0bbf\u0bb2\u0bcd \u0baa\u0bc7\u0b9a\u0bc1\u0bb5\u0bcb\u0bae\u0bcd."
+          },
+          "description": "Language to prompt mapping",
+          "title": "Language Prompt Mapping"
+        },
+        "speaker_provider": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SpeakerProvider"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "sarvam",
+          "description": "Speaker provider"
+        },
+        "speech_settings": {
+          "$ref": "#/$defs/SpeechSettings",
+          "default": {
+            "pitch": null,
+            "pace": null,
+            "volume": null
+          },
+          "description": "Speech settings"
+        },
+        "enable_mixed_speaker_settings": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false,
+          "description": "Enable mixed speaker settings",
+          "title": "Enable Mixed Speaker Settings"
+        },
+        "mixed_speaker_config": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/MixedSpeakerConfig"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Mixed speaker configuration",
+          "title": "Mixed Speaker Config"
+        },
+        "silence_duration": {
+          "default": 300,
+          "description": "Silence duration in ms between sentences",
+          "title": "Silence Duration",
+          "type": "number"
+        },
+        "initial_language_speaker_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/LanguageName"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Per-language speaker mapping for the initial language lock",
+          "title": "Initial Language Speaker Mapping"
+        }
+      },
+      "title": "V2VTextToSpeechConfig",
+      "type": "object"
+    },
+    "VADConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "primary_vad": {
+          "$ref": "#/$defs/VADVariant",
+          "default": "basic-vad",
+          "description": "VAD model to use for primary speech detection"
+        },
+        "probability_modulator_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProbabilityModulatorConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Probability modulator configuration"
+        },
+        "speech_frame_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SpeechFrameConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Speech frame configuration"
+        }
+      },
+      "title": "VADConfig",
+      "type": "object"
+    },
+    "VADVariant": {
+      "enum": [
+        "basic-vad",
+        "hybrid-vad"
+      ],
+      "title": "VADVariant",
+      "type": "string"
+    },
+    "VariableConfig": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "default": "",
+          "title": "Value"
+        },
+        "description": {
+          "default": " ",
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "is_agent_updatable": {
+          "default": false,
+          "title": "Is Agent Updatable",
+          "type": "boolean"
+        },
+        "needs_initial_value": {
+          "default": true,
+          "description": "Whether the variable needs an initial value before llm call",
+          "title": "Needs Initial Value",
+          "type": "boolean"
+        },
+        "update_post_interaction": {
+          "default": false,
+          "title": "Update Post Interaction",
+          "type": "boolean"
+        },
+        "post_interaction_prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Prompt to update the variable after the call is made",
+          "title": "Post Interaction Prompt"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VariableType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "string",
+          "description": "Type of the variable (string, enum, int, float, date, datetime)"
+        },
+        "one_of": {
+          "default": [],
+          "description": "List of possible values",
+          "items": {
+            "type": "string"
+          },
+          "title": "One Of",
+          "type": "array"
+        },
+        "webhook_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WebhookVariableUpdateConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Configuration for updating this variable via interaction events webhook. If set, the variable can be updated during an active interaction."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "VariableConfig",
+      "type": "object"
+    },
+    "VariableType": {
+      "enum": [
+        "string",
+        "integer",
+        "float",
+        "boolean",
+        "enum",
+        "date",
+        "datetime"
+      ],
+      "title": "VariableType",
+      "type": "string"
+    },
+    "VobizUserInformation": {
+      "description": "Information about the user for Vobiz telephony provider",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "description": "Vobiz's unique call identifier (callId).",
+          "minLength": 1,
+          "title": "Call Sid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "call_sid"
+      ],
+      "title": "VobizUserInformation",
+      "type": "object"
+    },
+    "VoiceCallInteractionConfig": {
+      "properties": {
+        "allow_interrupt_during_playback": {
+          "default": true,
+          "description": "If enabled, user can interrupt the bot when it is speaking.",
+          "title": "Allow Interrupt During Playback",
+          "type": "boolean"
+        },
+        "vad_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VADConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "VAD configuration"
+        },
+        "nudge_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/V2VNudgeConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nudge configuration"
+        }
+      },
+      "title": "VoiceCallInteractionConfig",
+      "type": "object"
+    },
+    "VoiceSettings": {
+      "properties": {
+        "src_speaker": {
+          "title": "Src Speaker",
+          "type": "string"
+        },
+        "tgt_speaker": {
+          "title": "Tgt Speaker",
+          "type": "string"
+        },
+        "pitch": {
+          "title": "Pitch",
+          "type": "number"
+        },
+        "pace": {
+          "title": "Pace",
+          "type": "number"
+        },
+        "volume": {
+          "title": "Volume",
+          "type": "number"
+        },
+        "tts_model_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tts Model Name"
+        },
+        "stability": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stability"
+        },
+        "similarity_boost": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Similarity Boost"
+        },
+        "use_speaker_boost": {
+          "default": false,
+          "title": "Use Speaker Boost",
+          "type": "boolean"
+        },
+        "emotion": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Emotion"
+        },
+        "style": {
+          "default": 0.5,
+          "title": "Style",
+          "type": "number"
+        },
+        "speed": {
+          "default": 1.0,
+          "title": "Speed",
+          "type": "number"
+        },
+        "bypass_translate_transliterate": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false,
+          "title": "Bypass Translate Transliterate"
+        },
+        "preprocessing_mode": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LanguageProcessingMode"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "transliterate"
+        }
+      },
+      "required": [
+        "src_speaker",
+        "tgt_speaker",
+        "pitch",
+        "pace",
+        "volume"
+      ],
+      "title": "VoiceSettings",
+      "type": "object"
+    },
+    "WAUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "country_code": {
+          "description": "Country code of user's phone number without + sign.",
+          "examples": [
+            "91",
+            "1"
+          ],
+          "title": "Country Code",
+          "type": "string"
+        },
+        "phone_number": {
+          "description": "Phone number of the user without any specifiers.",
+          "examples": [
+            "9876543210"
+          ],
+          "title": "Phone Number",
+          "type": "string"
+        },
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "phone_number"
+        },
+        "call_sid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Provider call SID, if available (telephony channels).",
+          "title": "Call Sid"
+        },
+        "user_name": {
+          "description": "Name of the user",
+          "examples": [
+            "John Doe"
+          ],
+          "title": "User Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "country_code",
+        "phone_number",
+        "identifier",
+        "user_name"
+      ],
+      "title": "WAUserInformation",
+      "type": "object"
+    },
+    "WebCallUserInformation": {
+      "description": "Information about the user",
+      "properties": {
+        "identifier": {
+          "description": "Unique ID of user, this will be customField if provided. Otherwise, it will be either the phone number or email ID of the user.",
+          "examples": [
+            "09876543210",
+            "user1234@example.com",
+            "123-0045-1234-2030"
+          ],
+          "title": "Identifier",
+          "type": "string"
+        },
+        "user_identifier_type": {
+          "$ref": "#/$defs/UserIdentifierType",
+          "default": "email"
+        },
+        "call_sid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Provider call SID, if available (telephony channels).",
+          "title": "Call Sid"
+        },
+        "email": {
+          "description": "Email of the user.",
+          "title": "Email",
+          "type": "string"
+        },
+        "full_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Full Name of the user if available",
+          "title": "Full Name"
+        },
+        "first_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "First Name of the user if available",
+          "title": "First Name"
+        },
+        "last_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Last Name of the user if available",
+          "title": "Last Name"
+        }
+      },
+      "required": [
+        "identifier",
+        "email"
+      ],
+      "title": "WebCallUserInformation",
+      "type": "object"
+    },
+    "WebhookVariableUpdateConfig": {
+      "description": "Configuration for updating a variable via interaction events webhook.",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "description": "Whether webhook updates are enabled for this variable",
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "template": {
+          "description": "Jinja template to extract value from webhook payload. Example: '{{ kyc_status }}' or '{{ response.data.score }}'",
+          "title": "Template",
+          "type": "string"
+        }
+      },
+      "required": [
+        "template"
+      ],
+      "title": "WebhookVariableUpdateConfig",
+      "type": "object"
+    },
+    "WhatsAppApp": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "on_start_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OnStartAPIConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "on_end_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OnEndAPIConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "tool_runner_parameters": {
+          "$ref": "#/$defs/ToolRunnerParameters",
+          "default": {
+            "parameters": {}
+          }
+        },
+        "privacy_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PrivacyConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "memory_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MemoryConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "evaluation_config": {
+          "$ref": "#/$defs/EvaluationConfig"
+        },
+        "channel_type": {
+          "const": "whatsapp",
+          "default": "whatsapp",
+          "title": "Channel Type",
+          "type": "string"
+        },
+        "llm_config": {
+          "$ref": "#/$defs/WhatsAppLLMConfig"
+        },
+        "intro_message_config": {
+          "$ref": "#/$defs/WhatsAppIntroMessageConfig",
+          "default": {
+            "config_version": "1.0",
+            "text": null,
+            "audio": null,
+            "voice_call_audio": null,
+            "pre_recorded_audio_message": null
+          }
+        },
+        "language_config": {
+          "$ref": "#/$defs/WhatsAppLanguageConfig"
+        },
+        "speech_to_text_config": {
+          "$ref": "#/$defs/WhatsAppSpeechToTextConfig",
+          "default": {
+            "config_version": "1.0",
+            "asr_model_name": null,
+            "speech_hotwords": null,
+            "system_prompt": null,
+            "min_audio_duration_for_language_lid": null
+          }
+        },
+        "text_to_speech_config": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "1.0": "#/$defs/WhatsAppTextToSpeechConfig",
+                  "2.0": "#/$defs/TextToSpeechConfigV2"
+                },
+                "propertyName": "config_version"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/TextToSpeechConfigV2"
+                },
+                {
+                  "$ref": "#/$defs/WhatsAppTextToSpeechConfig"
+                }
+              ]
+            },
+            {
+              "$ref": "#/$defs/WhatsAppTextToSpeechConfig"
+            }
+          ],
+          "default": {
+            "config_version": "1.0",
+            "speaker_id": null,
+            "internal_id": null,
+            "language_speaker_mapping": {},
+            "language_voice_settings_mapping": {
+              "bn-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "bn-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "bn-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "en-US": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "en-f-limmits_xlit_en",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "gu-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.05,
+                "pitch": 0.6,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "gu-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "bn-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "hi-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "hi-f-int",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "kn-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.05,
+                "pitch": 0.2,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "kn-f-ai4b",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "kn-f-limmits",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "ml-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "ml-f-ai4b",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "ml-f-ai4b",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "mr-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "mr-f-limmits",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "od-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "od-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "hi-f-int",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "pa-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.2,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "pa-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "pa-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "ta-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 0.9,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "ta-f-ai4b",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "kn-f-ai4b",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              },
+              "te-IN": {
+                "bypass_translate_transliterate": false,
+                "emotion": null,
+                "pace": 1.0,
+                "pitch": 0.0,
+                "preprocessing_mode": "transliterate",
+                "similarity_boost": null,
+                "speed": 1.0,
+                "src_speaker": "te-f-indictts",
+                "stability": null,
+                "style": 0.5,
+                "tgt_speaker": "te-f-indictts",
+                "tts_model_name": "sarvam-tts",
+                "use_speaker_boost": false,
+                "volume": 1.0
+              }
+            },
+            "language_gender_settings_mapping": {
+              "as-IN": "Female",
+              "bn-IN": "Female",
+              "en-US": "Female",
+              "gu-IN": "Female",
+              "hi-IN": "Female",
+              "kn-IN": "Female",
+              "ml-IN": "Female",
+              "mr-IN": "Female",
+              "od-IN": "Female",
+              "pa-IN": "Female",
+              "ta-IN": "Female",
+              "te-IN": "Female"
+            },
+            "language_prompt_mapping": {
+              "en-US": "Hello, today we will be talking in English.",
+              "hi-IN": "\u0928\u092e\u0938\u094d\u0924\u0947, \u0906\u091c \u0939\u092e Hindi \u0914\u0930 English \u0926\u094b\u0928\u094b\u0902 \u092e\u0947\u0902 \u092c\u093e\u0924 \u0915\u0930\u0947\u0902\u0917\u0947, \u0920\u0940\u0915 \u0939\u0948?",
+              "ta-IN": "\u0bb5\u0ba3\u0b95\u0bcd\u0b95\u0bae\u0bcd, \u0b87\u0ba9\u0bcd\u0bb1\u0bc1 \u0ba8\u0bbe\u0bae\u0bcd \u0ba4\u0bae\u0bbf\u0bb4\u0bbf\u0bb2\u0bcd \u0baa\u0bc7\u0b9a\u0bc1\u0bb5\u0bcb\u0bae\u0bcd."
+            },
+            "speaker_provider": "sarvam",
+            "speech_settings": {
+              "pace": null,
+              "pitch": null,
+              "volume": null
+            },
+            "enable_mixed_speaker_settings": false,
+            "mixed_speaker_config": [],
+            "silence_duration": 300.0
+          },
+          "title": "Text To Speech Config"
+        },
+        "interaction_config": {
+          "$ref": "#/$defs/WhatsAppInteractionConfig",
+          "default": {
+            "config_version": "1.0",
+            "max_interaction_time_seconds": null,
+            "skip_translate_transliterate": false,
+            "enable_indic_native_mode": false,
+            "use_native_function_calling": false,
+            "send_audio_as_transliterated_text": false,
+            "output_script_mode": "code_mixed",
+            "smart_script_change": false,
+            "smart_input_translate_config": null,
+            "enable_byolo_agent": false,
+            "use_input_translate": false,
+            "generate_audio_from_text": false,
+            "interaction_timeout_after_last_message_seconds": 86400,
+            "message_limit_config": null,
+            "denied_message_to_user_config": null,
+            "interaction_type": "chat_only",
+            "supported_widgets": [
+              "audio",
+              "text"
+            ],
+            "nudge_config": null,
+            "voice_call_interaction_config": null
+          }
+        },
+        "guardrail_config": {
+          "$ref": "#/$defs/WhatsAppGuardrailConfig",
+          "default": {
+            "config_version": "1.0"
+          }
+        },
+        "output_config": {
+          "$ref": "#/$defs/WhatsAppOutputConfig",
+          "default": {
+            "config_version": "1.0",
+            "output_type": "text",
+            "wa_output_mode": "text"
+          }
+        }
+      },
+      "required": [
+        "llm_config",
+        "language_config"
+      ],
+      "title": "WhatsAppApp",
+      "type": "object"
+    },
+    "WhatsAppGuardrailConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        }
+      },
+      "title": "WhatsAppGuardrailConfig",
+      "type": "object"
+    },
+    "WhatsAppInteractionConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "max_interaction_time_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Maximum time allowed for interaction in seconds",
+          "title": "Max Interaction Time Seconds"
+        },
+        "skip_translate_transliterate": {
+          "default": false,
+          "description": "Skip translate transliteration",
+          "title": "Skip Translate Transliterate",
+          "type": "boolean"
+        },
+        "enable_indic_native_mode": {
+          "default": false,
+          "description": "Enable native Indic language input and output processing",
+          "title": "Enable Indic Native Mode",
+          "type": "boolean"
+        },
+        "use_native_function_calling": {
+          "default": false,
+          "description": "Use native function calling in chat LLM",
+          "title": "Use Native Function Calling",
+          "type": "boolean"
+        },
+        "send_audio_as_transliterated_text": {
+          "default": false,
+          "description": "send transliterated text",
+          "title": "Send Audio As Transliterated Text",
+          "type": "boolean"
+        },
+        "output_script_mode": {
+          "$ref": "#/$defs/ScriptName",
+          "default": "code_mixed",
+          "description": "output script mode"
+        },
+        "smart_script_change": {
+          "default": false,
+          "description": "use dynamic script switch",
+          "title": "Smart Script Change",
+          "type": "boolean"
+        },
+        "smart_input_translate_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SmartTranslateConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "smart input translate configuration"
+        },
+        "enable_byolo_agent": {
+          "default": false,
+          "description": "use byolo agent",
+          "title": "Enable Byolo Agent",
+          "type": "boolean"
+        },
+        "use_input_translate": {
+          "default": false,
+          "description": "use input translate",
+          "title": "Use Input Translate",
+          "type": "boolean"
+        },
+        "generate_audio_from_text": {
+          "default": false,
+          "description": "generate audio from text",
+          "title": "Generate Audio From Text",
+          "type": "boolean"
+        },
+        "interaction_timeout_after_last_message_seconds": {
+          "default": 86400,
+          "description": "If no message is received from user for this duration, the interaction will be ended",
+          "title": "Interaction Timeout After Last Message Seconds",
+          "type": "integer"
+        },
+        "message_limit_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InteractionMessageLimitConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Message limit configuration"
+        },
+        "denied_message_to_user_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeniedMessageToUserConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Denied message to user configuration"
+        },
+        "interaction_type": {
+          "$ref": "#/$defs/WhatsAppInteractionType",
+          "default": "chat_only",
+          "description": "Interaction type"
+        },
+        "supported_widgets": {
+          "description": "Widgets that are supported by the agent",
+          "items": {
+            "$ref": "#/$defs/WhatsAppSupportedWidgetType"
+          },
+          "title": "Supported Widgets",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "nudge_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WhatsAppNudgeConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Nudge configuration"
+        },
+        "voice_call_interaction_config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VoiceCallInteractionConfig"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Telephony interaction configuration"
+        }
+      },
+      "title": "WhatsAppInteractionConfig",
+      "type": "object"
+    },
+    "WhatsAppInteractionType": {
+      "enum": [
+        "immersive",
+        "chat_only",
+        "voice_call_only"
+      ],
+      "title": "WhatsAppInteractionType",
+      "type": "string"
+    },
+    "WhatsAppIntroMessageConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial message text",
+          "title": "Text"
+        },
+        "audio": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial message text that the bot will convert to audio and send as a chat widget",
+          "title": "Audio"
+        },
+        "voice_call_audio": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Initial message text that the bot will convert to audio and send when in a voice call",
+          "title": "Voice Call Audio"
+        },
+        "pre_recorded_audio_message": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PreRecordedAudioMessage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pre-recorded audio message that the bot will send to user. If available, takes priority over intro_message"
+        }
+      },
+      "title": "WhatsAppIntroMessageConfig",
+      "type": "object"
+    },
+    "WhatsAppLLMConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "llm_model_variant": {
+          "title": "Llm Model Variant",
+          "type": "string"
+        },
+        "tool_llm_model_variant": {
+          "default": "yotta/llama-3.1-70b",
+          "title": "Tool Llm Model Variant",
+          "type": "string"
+        },
+        "temperature": {
+          "default": 0.1,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "agent_config": {
+          "$ref": "#/$defs/BaseAgentConfig",
+          "description": "Agent config"
+        },
+        "fallback_messages": {
+          "default": [
+            "Sorry, I could not understand. Can you please repeat?"
+          ],
+          "description": "Fallback messages to use when model fails to generate a response",
+          "items": {
+            "type": "string"
+          },
+          "title": "Fallback Messages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "llm_model_variant",
+        "agent_config"
+      ],
+      "title": "WhatsAppLLMConfig",
+      "type": "object"
+    },
+    "WhatsAppLanguageConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "initial_language_name": {
+          "$ref": "#/$defs/LanguageName",
+          "description": "Initial language for bot"
+        },
+        "supported_languages": {
+          "description": "Languages supported",
+          "items": {
+            "$ref": "#/$defs/LanguageName"
+          },
+          "title": "Supported Languages",
+          "type": "array"
+        },
+        "lid_supported_languages": {
+          "default": [],
+          "description": "Languages supported for LID",
+          "items": {
+            "$ref": "#/$defs/LanguageName"
+          },
+          "title": "Lid Supported Languages",
+          "type": "array"
+        },
+        "enable_language_identification": {
+          "default": false,
+          "description": "Enable user language identification",
+          "title": "Enable Language Identification",
+          "type": "boolean"
+        },
+        "indic_language_style": {
+          "$ref": "#/$defs/IndicLanguageStyle",
+          "default": "classic_colloquial",
+          "description": "Indic language style"
+        },
+        "numbers_in_indic": {
+          "default": false,
+          "description": "Enable or disable transliteration of numbers into Indic scripts",
+          "title": "Numbers In Indic",
+          "type": "boolean"
+        },
+        "custom_code_mixed_words": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Custom code mixed words for each language",
+          "title": "Custom Code Mixed Words"
+        }
+      },
+      "required": [
+        "initial_language_name",
+        "supported_languages"
+      ],
+      "title": "WhatsAppLanguageConfig",
+      "type": "object"
+    },
+    "WhatsAppNudgeConfig": {
+      "properties": {
+        "enable_inactivity_nudge": {
+          "default": false,
+          "description": "Enable inactivity nudge",
+          "title": "Enable Inactivity Nudge",
+          "type": "boolean"
+        },
+        "user_nudge_message_configs": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "template": "#/$defs/TemplateNudgeMessageConfig",
+                "tool": "#/$defs/ToolNudgeMessageConfig"
+              },
+              "propertyName": "nudge_type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/TemplateNudgeMessageConfig"
+              },
+              {
+                "$ref": "#/$defs/ToolNudgeMessageConfig"
+              }
+            ]
+          },
+          "title": "User Nudge Message Configs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "user_nudge_message_configs"
+      ],
+      "title": "WhatsAppNudgeConfig",
+      "type": "object"
+    },
+    "WhatsAppOnEndMode": {
+      "enum": [
+        "document",
+        "image",
+        "text"
+      ],
+      "title": "WhatsAppOnEndMode",
+      "type": "string"
+    },
+    "WhatsAppOutputConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "output_type": {
+          "$ref": "#/$defs/OutputTypes",
+          "default": "text"
+        },
+        "wa_output_mode": {
+          "default": "text",
+          "enum": [
+            "text",
+            "text_and_audio"
+          ],
+          "title": "Wa Output Mode",
+          "type": "string"
+        }
+      },
+      "title": "WhatsAppOutputConfig",
+      "type": "object"
+    },
+    "WhatsAppSpeechToTextConfig": {
+      "properties": {
+        "config_version": {
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "asr_model_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the ASR model to use",
+          "title": "Asr Model Name"
+        },
+        "speech_hotwords": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "List of hotwords",
+          "title": "Speech Hotwords"
+        },
+        "system_prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "System prompt to use",
+          "title": "System Prompt"
+        },
+        "min_audio_duration_for_language_lid": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Minimum audio duration for language LID",
+          "title": "Min Audio Duration For Language Lid"
+        }
+      },
+      "title": "WhatsAppSpeechToTextConfig",
+      "type": "object"
+    },
+    "WhatsAppSupportedWidgetType": {
+      "description": "Enum for supported WhatsApp message types - a subset of WABaseMessageType",
+      "enum": [
+        "text",
+        "image",
+        "document",
+        "audio",
+        "video"
+      ],
+      "title": "WhatsAppSupportedWidgetType",
+      "type": "string"
+    },
+    "WhatsAppTextToSpeechConfig": {
+      "properties": {
+        "config_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Config Version",
+          "type": "string"
+        },
+        "speaker_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Speaker ID",
+          "title": "Speaker Id"
+        },
+        "internal_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ai_voices.internal_id this config was hydrated from",
+          "title": "Internal Id"
+        },
+        "language_speaker_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": {},
+          "description": "Language to speaker mapping",
+          "title": "Language Speaker Mapping"
+        },
+        "language_voice_settings_mapping": {
+          "additionalProperties": {
+            "$ref": "#/$defs/VoiceSettings"
+          },
+          "default": {
+            "hi-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "hi-f-int",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "bn-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "bn-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "bn-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "gu-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.05,
+              "pitch": 0.6,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "gu-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "bn-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "kn-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.05,
+              "pitch": 0.2,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "kn-f-ai4b",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "kn-f-limmits",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "ml-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "ml-f-ai4b",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "ml-f-ai4b",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "mr-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "mr-f-limmits",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "od-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "od-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "pa-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.2,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "pa-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "pa-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "ta-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 0.9,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "ta-f-ai4b",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "kn-f-ai4b",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "te-IN": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "te-f-indictts",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "te-f-indictts",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            },
+            "en-US": {
+              "bypass_translate_transliterate": false,
+              "emotion": null,
+              "pace": 1.0,
+              "pitch": 0.0,
+              "preprocessing_mode": "transliterate",
+              "similarity_boost": null,
+              "speed": 1.0,
+              "src_speaker": "en-f-limmits_xlit_en",
+              "stability": null,
+              "style": 0.5,
+              "tgt_speaker": "hi-f-int",
+              "tts_model_name": "sarvam-tts",
+              "use_speaker_boost": false,
+              "volume": 1.0
+            }
+          },
+          "description": "Language to voice settings mapping",
+          "title": "Language Voice Settings Mapping",
+          "type": "object"
+        },
+        "language_gender_settings_mapping": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {
+            "hi-IN": "Female",
+            "bn-IN": "Female",
+            "kn-IN": "Female",
+            "ml-IN": "Female",
+            "mr-IN": "Female",
+            "od-IN": "Female",
+            "pa-IN": "Female",
+            "ta-IN": "Female",
+            "te-IN": "Female",
+            "gu-IN": "Female",
+            "en-US": "Female",
+            "as-IN": "Female"
+          },
+          "description": "Language to gender settings mapping",
+          "title": "Language Gender Settings Mapping",
+          "type": "object"
+        },
+        "language_prompt_mapping": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": {
+            "en-US": "Hello, today we will be talking in English.",
+            "hi-IN": "\u0928\u092e\u0938\u094d\u0924\u0947, \u0906\u091c \u0939\u092e Hindi \u0914\u0930 English \u0926\u094b\u0928\u094b\u0902 \u092e\u0947\u0902 \u092c\u093e\u0924 \u0915\u0930\u0947\u0902\u0917\u0947, \u0920\u0940\u0915 \u0939\u0948?",
+            "ta-IN": "\u0bb5\u0ba3\u0b95\u0bcd\u0b95\u0bae\u0bcd, \u0b87\u0ba9\u0bcd\u0bb1\u0bc1 \u0ba8\u0bbe\u0bae\u0bcd \u0ba4\u0bae\u0bbf\u0bb4\u0bbf\u0bb2\u0bcd \u0baa\u0bc7\u0b9a\u0bc1\u0bb5\u0bcb\u0bae\u0bcd."
+          },
+          "description": "Language to prompt mapping",
+          "title": "Language Prompt Mapping"
+        },
+        "speaker_provider": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SpeakerProvider"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "sarvam",
+          "description": "Speaker provider"
+        },
+        "speech_settings": {
+          "$ref": "#/$defs/SpeechSettings",
+          "default": {
+            "pitch": null,
+            "pace": null,
+            "volume": null
+          },
+          "description": "Speech settings"
+        },
+        "enable_mixed_speaker_settings": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false,
+          "description": "Enable mixed speaker settings",
+          "title": "Enable Mixed Speaker Settings"
+        },
+        "mixed_speaker_config": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/MixedSpeakerConfig"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": [],
+          "description": "Mixed speaker configuration",
+          "title": "Mixed Speaker Config"
+        },
+        "silence_duration": {
+          "default": 300,
+          "description": "Silence duration in ms between sentences",
+          "title": "Silence Duration",
+          "type": "number"
+        }
+      },
+      "title": "WhatsAppTextToSpeechConfig",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "v2v": "#/$defs/V2VApp",
+      "whatsapp": "#/$defs/WhatsAppApp"
+    },
+    "propertyName": "channel_type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/V2VApp"
+    },
+    {
+      "$ref": "#/$defs/WhatsAppApp"
+    }
+  ]
+}

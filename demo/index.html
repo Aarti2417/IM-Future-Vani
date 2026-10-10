@@ -40,6 +40,9 @@
       <button class="tab-btn" id="tab-btn-evidence" data-tab="tab-evidence">
         <span class="tab-icon">📊</span> 12.8k Call Evidence
       </button>
+      <button class="tab-btn" id="tab-btn-sarvam" data-tab="tab-sarvam">
+        <span class="tab-icon">🎙️</span> Sarvam Agent (Samvaad)
+      </button>
     </nav>
 
     <div class="header-right">
@@ -710,6 +713,119 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- TAB 6: SARVAM VOICE AGENTS (SAMVAAD) INTEGRATION -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <section class="tab-pane" id="tab-sarvam">
+      <div class="section-hero">
+        <div class="hero-text">
+          <h2>Sarvam Voice Agents Platform (Samvaad) Integration</h2>
+          <p>Let Sarvam's hosted infrastructure handle telephony, streaming audio, barge-in, STT, and Bulbul TTS, while IndiaMART's grounded tools and dynamic persona memory power the intelligence!</p>
+        </div>
+        <div class="hero-actions">
+          <span class="status-pill status-ready" style="padding: 8px 16px;">
+            <span class="status-dot"></span>
+            <span>MCP URL: https://mcp.sarvam.ai/voice-agents</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Architecture Comparison Cards -->
+      <div class="sarvam-arch-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 25px;">
+        <div class="feature-card" style="border-top: 3px solid var(--accent-cyan);">
+          <div class="feature-icon">☁️</div>
+          <h3>Sarvam Handles Heavy Lifting</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px; color: var(--text-secondary); line-height: 1.8;">
+            <li>✓ <strong>Telephony:</strong> Native SIP / Exotel trunking & numbers</li>
+            <li>✓ <strong>Sub-Second Loop:</strong> Saaras v3 STT & Bulbul v4-flash</li>
+            <li>✓ <strong>Instant Barge-In:</strong> Hardware acoustic speech interruption</li>
+            <li>✓ <strong>Turn Orchestration:</strong> Sarvam-105B-Conversations harness</li>
+            <li>✓ <strong>Outbound Dialing:</strong> CSV cohorts & campaign schedules</li>
+          </ul>
+        </div>
+
+        <div class="feature-card" style="border-top: 3px solid var(--brand-primary);">
+          <div class="feature-icon">🧠</div>
+          <h3>IndiaMART VANI Powers the Brain</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px; color: var(--text-secondary); line-height: 1.8;">
+            <li>✓ <strong>Vyapari Trade Cadence:</strong> Grounded in 12,788 calls</li>
+            <li>✓ <strong>Pre-Call Calibration:</strong> On-Start hook injects persona</li>
+            <li>✓ <strong>Anti-Hallucination:</strong> Live OTP leads & official pricing</li>
+            <li>✓ <strong>Grammar Agreement:</strong> Strict Hindi verb agreement</li>
+            <li>✓ <strong>Persistent Evolution:</strong> On-End hook updates memory</li>
+          </ul>
+        </div>
+
+        <div class="feature-card" style="border-top: 3px solid var(--accent-emerald);">
+          <div class="feature-icon">🔌</div>
+          <h3>Connect via MCP Protocol</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px; color: var(--text-secondary); line-height: 1.8;">
+            <li>✓ <strong>Server URL:</strong> <code>https://mcp.sarvam.ai/voice-agents</code></li>
+            <li>✓ <strong>Clients:</strong> Cursor, VS Code, Claude Code, Antigravity</li>
+            <li>✓ <strong>Tools:</strong> <code>configure_agent</code>, <code>create_http_tool</code></li>
+            <li>✓ <strong>Evals:</strong> Automated test suites before dialing</li>
+            <li>✓ <strong>Deployment:</strong> <code>python scripts/deploy_sarvam_agent.py</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Interactive Webhook & Grounded Tools Testing Lab -->
+      <div class="card" style="margin-bottom: 25px;">
+        <div class="card-header">
+          <h3>⚡ Live Webhook & Grounded Tools Playground</h3>
+          <span class="chip chip-highlight">Local Bridge Active</span>
+        </div>
+        <div class="card-body">
+          <p style="color: var(--text-secondary); margin-bottom: 18px;">
+            Test the exact payloads exchanged between Sarvam's hosted agent and IndiaMART's local backend tools:
+          </p>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px;">
+            <button class="btn btn-primary" id="btn-test-onstart">
+              🚀 1. Trigger On-Start Hook
+            </button>
+            <button class="btn btn-secondary" id="btn-test-leads">
+              📊 2. Tool: Verified Buyer Leads
+            </button>
+            <button class="btn btn-secondary" id="btn-test-pricing">
+              💰 3. Tool: Official Pricing
+            </button>
+            <button class="btn btn-secondary" id="btn-test-booking">
+              📅 4. Tool: Book RM Slot
+            </button>
+            <button class="btn btn-primary" id="btn-test-onend" style="background: var(--accent-emerald); border-color: var(--accent-emerald);">
+              🧠 5. Trigger On-End Hook (Memory Update)
+            </button>
+          </div>
+
+          <!-- Payload Output Viewer -->
+          <div style="background: rgba(10, 16, 28, 0.9); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span id="sarvam-test-label" style="font-weight: 600; font-size: 0.9rem; color: var(--accent-cyan);">Payload Inspector (Click any button above to test)</span>
+              <span id="sarvam-test-status" class="chip chip-sm">Ready</span>
+            </div>
+            <pre id="sarvam-test-output" style="max-height: 280px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; color: #a5f3fc; white-space: pre-wrap;">{
+  "notice": "Select any step above to execute live against http://localhost:8000"
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent Spec JSON Box -->
+      <div class="card">
+        <div class="card-header">
+          <h3>📋 Sarvam Agent Specification (`sarvam_agent_spec.json`)</h3>
+          <button class="btn btn-secondary chip-sm" id="btn-load-spec">🔄 Load Fresh Spec</button>
+        </div>
+        <div class="card-body">
+          <p style="color: var(--text-secondary); margin-bottom: 12px;">
+            Import this validated specification directly into Sarvam Samvaad (Dashboard or MCP tool <code>configure_agent</code>):
+          </p>
+          <pre id="sarvam-spec-viewer" style="max-height: 320px; overflow-y: auto; background: rgba(10, 16, 28, 0.95); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 15px; font-family: monospace; font-size: 0.82rem; color: #cbd5e1; white-space: pre-wrap;">Loading spec...</pre>
         </div>
       </div>
     </section>

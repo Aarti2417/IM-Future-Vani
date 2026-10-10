@@ -158,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initScenarios();
   initCallControls();
   initRoleplaySimulator();
-  initMoodShiftToolbar();
   initPersonaStudio();
   initSignalLab();
   initMemoryTab();

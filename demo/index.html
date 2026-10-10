@@ -240,30 +240,13 @@
             <!-- Dynamically injected turn bubbles -->
           </div>
 
-          <!-- ⚡ Mid-Call Mood Shift Toolbar -->
-          <div class="mood-shift-toolbar" id="mood-shift-toolbar">
-            <span class="mood-toolbar-title">⚡ Test Mid-Call Mood Shifts:</span>
-            <button type="button" class="mood-btn btn-mood-angry" id="btn-mood-angry" title="Switch mood from calm to angry">
-              😡 Get Angry ("Baar baar kyu phone karte ho, band karo!")
-            </button>
-            <button type="button" class="mood-btn btn-mood-rushed" id="btn-mood-rushed" title="Simulate being in a hurry">
-              ⏱️ Get Rushed ("Abhi counter pe bheed hai, time nahi hai!")
-            </button>
-            <button type="button" class="mood-btn btn-mood-skeptical" id="btn-mood-skeptical" title="Challenge lead quality & past loss">
-              🤨 Get Skeptical ("Pehle bhi paise doob gaye the!")
-            </button>
-            <button type="button" class="mood-btn btn-mood-curious" id="btn-mood-curious" title="Show positive interest">
-              💡 Get Curious ("Achha batao, kaun se buyers hain?")
-            </button>
-          </div>
-
-          <!-- Custom Utterance Input -->
+          <!-- Custom Utterance & Microphone Voice Input -->
           <form class="custom-input-form" id="custom-utterance-form">
-            <input type="text" id="input-custom-utterance" placeholder="Type or click '🎙️ Speak' to talk directly..." autocomplete="off">
+            <input type="text" id="input-custom-utterance" placeholder="Click '🎙️ Speak' and talk in your own voice (Hindi, Hinglish, English)..." autocomplete="off">
             <button type="button" class="btn btn-mic" id="btn-mic-record" title="Click to speak using your microphone">
               <span class="mic-icon">🎙️</span> <span id="mic-status-text">Speak</span>
             </button>
-            <button type="submit" class="btn btn-primary" id="btn-send-utterance">Send Turn</button>
+            <button type="submit" class="btn btn-primary" id="btn-send-utterance">Send</button>
           </form>
 
           <!-- Call Action Controls -->
@@ -737,6 +720,6 @@
   <audio id="global-audio-player" style="display: none;"></audio>
 
   <!-- JavaScript -->
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>
